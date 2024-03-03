@@ -1,5 +1,3 @@
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,23 +14,7 @@ builder.Services.AddSwaggerGen(c =>
         "v1",
         new OpenApiInfo
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
-            {
-                {
-                    "x-logo",
-                    new OpenApiObject
-                    {
-                        {
-                            "url",
-                            new OpenApiString("https://upload.wikimedia.org/wikipedia/commons/d/dd/AlhafiLogo.JPG")
-                        },
-                        { "backgroundColor", new OpenApiString("#FFFFFF") },
-                        { "altText", new OpenApiString(" Logo") }
-                    }
-                }
-            },
-            //Title = builder.Environment.ApplicationName,
-             Title = "Barefoot API",
+            Title = "Barefoot API",
             Version = "v1",
             Contact = new()
             {
@@ -40,7 +22,8 @@ builder.Services.AddSwaggerGen(c =>
                 Email = "alhafi@hotmail.com",
                 Url = new Uri("https://www.alhafi.org/")
             },
-            Description = " BareFoot Minimal API Build in <b>dotnet new webapi -minimal</b>  Hosted at github  <a href='https://github.com/alhafibarefoot/BareFoot_API'>here</a>",
+            Description =
+                " BareFoot Minimal API Build in <b>dotnet new webapi -minimal</b>  Hosted at github  <a href='https://github.com/alhafibarefoot/BareFoot_API'>here</a>",
             License = new Microsoft.OpenApi.Models.OpenApiLicense(),
             TermsOfService = new("https://www.alhafi.org/")
         }
@@ -52,13 +35,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-     app.UseSwagger();
+    app.UseSwagger();
     // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
     // specifying the Swagger JSON endpoint.
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot Minimal API -v1");
-
     });
 }
 if (app.Environment.IsStaging())
@@ -92,11 +74,14 @@ app.MapGet(
         {
             var forecast = Enumerable
                 .Range(1, 5)
-                .Select(index => new WeatherForecast(
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
+                .Select(
+                    index =>
+                        new WeatherForecast(
+                            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                            Random.Shared.Next(-20, 55),
+                            summaries[Random.Shared.Next(summaries.Length)]
+                        )
+                )
                 .ToArray();
             return forecast;
         }
@@ -110,3 +95,20 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
+// Extensions = new Dictionary<string, IOpenApiExtension>
+// {
+//     {
+//         "x-logo",
+//         new OpenApiObject
+//         {
+//             {
+//                 "url",
+//                 new OpenApiString("https://upload.wikimedia.org/wikipedia/commons/d/dd/AlhafiLogo.JPG")
+//             },
+//             { "backgroundColor", new OpenApiString("#FFFFFF") },
+//             { "altText", new OpenApiString(" Logo") }
+//         }
+//     }
+// },
+//Title = builder.Environment.ApplicationName,
