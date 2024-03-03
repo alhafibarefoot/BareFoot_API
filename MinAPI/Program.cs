@@ -36,12 +36,16 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-    // specifying the Swagger JSON endpoint.
-    app.UseSwaggerUI(c =>
+    app.UseSwagger(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot Minimal API -v1");
+        options.RouteTemplate = "swagger/{documentName}/swagger.json";
+    });
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot API V1");
+        options.RoutePrefix = "swagger";
+        options.InjectStylesheet("/MinAPI/swagger/custom.css");
     });
 }
 if (app.Environment.IsStaging())
@@ -56,12 +60,15 @@ if (app.Environment.IsProduction())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-           Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
-    RequestPath = "/wwwroot"
-});
+
+    // app.UseStaticFiles(new StaticFileOptions()
+    // {
+    //     FileProvider = new PhysicalFileProvider(
+    //         Path.Combine(Directory.GetCurrentDirectory(), @"swagger")),
+    //     RequestPath = new PathString("/swagger")
+    // });
+
+
 
 var summaries = new[]
 {
