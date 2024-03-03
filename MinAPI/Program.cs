@@ -45,7 +45,7 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot API V1");
         options.RoutePrefix = "swagger";
-        options.InjectStylesheet("/MinAPI/swagger/custom.css");
+        options.InjectStylesheet("/custom.css");
     });
 }
 if (app.Environment.IsStaging())
@@ -61,12 +61,12 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-    // app.UseStaticFiles(new StaticFileOptions()
-    // {
-    //     FileProvider = new PhysicalFileProvider(
-    //         Path.Combine(Directory.GetCurrentDirectory(), @"swagger")),
-    //     RequestPath = new PathString("/swagger")
-    // });
+    app.UseStaticFiles(new StaticFileOptions()
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @"swagger")),
+        RequestPath = new PathString("/swagger")
+    });
 
 
 
