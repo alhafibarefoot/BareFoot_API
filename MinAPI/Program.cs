@@ -13,6 +13,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+if (app.Environment.IsStaging())
+{
+    // your code here
+}
+if (app.Environment.IsProduction())
+{
+     // your code here
+}
 
 app.UseHttpsRedirection();
 
