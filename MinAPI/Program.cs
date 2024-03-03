@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,14 @@ if (app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+    RequestPath = "/wwwroot"
+});
 
 var summaries = new[]
 {
