@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(c =>
                     {
                         {
                             "url",
-                            new OpenApiString("https://www.petstore.com/assets/images/logo.png")
+                            new OpenApiString("https://upload.wikimedia.org/wikipedia/commons/d/dd/AlhafiLogo.JPG")
                         },
                         { "backgroundColor", new OpenApiString("#FFFFFF") },
                         { "altText", new OpenApiString(" Logo") }
@@ -40,7 +40,7 @@ builder.Services.AddSwaggerGen(c =>
                 Email = "alhafi@hotmail.com",
                 Url = new Uri("https://www.alhafi.org/")
             },
-            Description = " BareFoot Minimal API - Swagger",
+            Description = " BareFoot Minimal API Build in <b>dotnet new webapi -minimal</b>  Hosted at github  <a href='https://github.com/alhafibarefoot/BareFoot_API'>here</a>",
             License = new Microsoft.OpenApi.Models.OpenApiLicense(),
             TermsOfService = new("https://www.alhafi.org/")
         }
@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
     // specifying the Swagger JSON endpoint.
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot_API");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot Minimal API -v1");
 
     });
 }
