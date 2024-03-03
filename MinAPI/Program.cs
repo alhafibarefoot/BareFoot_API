@@ -1,3 +1,7 @@
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,9 +14,25 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
     c.SwaggerDoc(
         "v1",
-        new()
+        new OpenApiInfo
         {
-            Title = builder.Environment.ApplicationName,
+            Extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                {
+                    "x-logo",
+                    new OpenApiObject
+                    {
+                        {
+                            "url",
+                            new OpenApiString("https://www.petstore.com/assets/images/logo.png")
+                        },
+                        { "backgroundColor", new OpenApiString("#FFFFFF") },
+                        { "altText", new OpenApiString(" Logo") }
+                    }
+                }
+            },
+            //Title = builder.Environment.ApplicationName,
+             Title = "Barefoot API",
             Version = "v1",
             Contact = new()
             {
@@ -32,8 +52,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+     app.UseSwagger();
+    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+    // specifying the Swagger JSON endpoint.
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot_API");
+
+    });
 }
 if (app.Environment.IsStaging())
 {
