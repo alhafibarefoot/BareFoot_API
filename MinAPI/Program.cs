@@ -2,6 +2,24 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Creating Variables of Lists
+var varNewslist = new List<NewsListStatic>
+{
+    new NewsListStatic
+    {
+        Id = 1,
+        Title = "F1 News",
+        Content = "Christian Horner Surprised By Team Strategy At Bahrain GP ."
+    },
+    new NewsListStatic
+    {
+        Id = 2,
+        Title = "Haley will win",
+        Content =
+            "Former South Carolina Gov. Nikki Haley will win the Republican presidential primary in Washington, DC"
+    },
+};
+
 // Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
@@ -60,4 +78,61 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+//*************************Static Hello End Point*******************************************
+
+app.MapGet("/hello", () => "[GET] Hello World!").WithTags("Hello");
+app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
+app.MapPut("/hello", () => "[PUT] Hello World!").WithTags("Hello");
+app.MapDelete("/hello", () => "[DELETE] Hello World!").WithTags("Hello");
+
+//**************************Static Record End Points*****************************************
+//Get All record
+app.MapGet(
+        "/staticNews",
+        () =>
+        {
+            return Results.Ok(varNewslist);
+        }
+    )
+    .WithTags("Static News");
+
+//Get specif Record
+app.MapGet(
+        "/staticNews/{id}",
+        (int id) =>
+        {
+            var varNews = varNewslist.Find(c => c.Id == id);
+            if (varNews == null)
+                return Results.NotFound("Sorry this News doesn't exsists");
+            return Results.Ok(varNews);
+        }
+    )
+    .WithTags("Static News");
+
+//Update specif Record
+app.MapPut(
+        "/staticNews/{id}",
+        (NewsListStatic UpdateNewsListStatic, int id) =>
+        {
+            var varNews = varNewslist.Find(c => c.Id == id);
+            if (varNews == null)
+                return Results.NotFound("Sorry this command doesn't exsists");
+
+            varNews.Title = UpdateNewsListStatic.Title;
+            varNews.Content = UpdateNewsListStatic.Content;
+
+            return Results.Ok(varNews);
+        }
+    )
+    .WithTags("Static News");
+
+//*******************************************************************************************
+
 app.Run();
+
+record NewsListStatic
+{
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+}
