@@ -1,10 +1,9 @@
-using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -45,7 +44,7 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot API V1");
         options.RoutePrefix = "swagger";
-        options.InjectStylesheet("/css/custom.css");
+        options.InjectStylesheet("/css/swagger.css");
     });
 }
 if (app.Environment.IsStaging())
@@ -60,15 +59,6 @@ if (app.Environment.IsProduction())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
-// app.UseStaticFiles(new StaticFileOptions()
-// {
-//     FileProvider = new PhysicalFileProvider(
-//         Path.Combine(Directory.GetCurrentDirectory(), @"swagger")),
-//     RequestPath = new PathString("/swagger")
-// });
-
-
 
 var summaries = new[]
 {
@@ -90,14 +80,11 @@ app.MapGet(
         {
             var forecast = Enumerable
                 .Range(1, 5)
-                .Select(
-                    index =>
-                        new WeatherForecast(
-                            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            Random.Shared.Next(-20, 55),
-                            summaries[Random.Shared.Next(summaries.Length)]
-                        )
-                )
+                .Select(index => new WeatherForecast(
+                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                    Random.Shared.Next(-20, 55),
+                    summaries[Random.Shared.Next(summaries.Length)]
+                ))
                 .ToArray();
             return forecast;
         }
@@ -112,19 +99,3 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
-// Extensions = new Dictionary<string, IOpenApiExtension>
-// {
-//     {
-//         "x-logo",
-//         new OpenApiObject
-//         {
-//             {
-//                 "url",
-//                 new OpenApiString("https://upload.wikimedia.org/wikipedia/commons/d/dd/AlhafiLogo.JPG")
-//             },
-//             { "backgroundColor", new OpenApiString("#FFFFFF") },
-//             { "altText", new OpenApiString(" Logo") }
-//         }
-//     }
-// },
-//Title = builder.Environment.ApplicationName,
