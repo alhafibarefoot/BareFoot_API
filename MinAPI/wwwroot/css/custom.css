@@ -1,0 +1,30 @@
+/* .topbar-wrapper img[alt="Swagger UI"], .topbar-wrapper span {
+    visibility: hidden;
+}
+
+.topbar-wrapper .link:after {
+    content: 'BareFoot API';
+    color: #fff;
+    visibility: visible;
+    display: block;
+    position: absolute;
+    padding: 15px;
+} */
+
+.topbar-wrapper img {
+    content: url('/AlhafiLogo.jpg');
+    background-color: white;
+    alt: var(AlhafiLogo) ;
+
+
+
+}
+
+.topbar-wrapper .link:after {
+    content: 'BareFoot Swagger Documentation';
+    color: #fff;
+    visibility: visible;
+    display: block;
+    position: absolute;
+    padding: 60px;
+}
