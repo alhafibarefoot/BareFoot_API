@@ -85,7 +85,7 @@ app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
 app.MapPut("/hello", () => "[PUT] Hello World!").WithTags("Hello");
 app.MapDelete("/hello", () => "[DELETE] Hello World!").WithTags("Hello");
 
-//**************************Static Record End Points*****************************************
+//*****************Static Record End Points(Data Will not save after close )*****************
 //Get All record
 app.MapGet(
         "/staticNews",
