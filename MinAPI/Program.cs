@@ -109,6 +109,7 @@ app.MapGet(
     )
     .WithTags("Static News");
 
+
 //Update specif Record
 app.MapPut(
         "/staticNews/{id}",
