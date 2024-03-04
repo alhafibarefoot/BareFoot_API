@@ -109,7 +109,6 @@ app.MapGet(
     )
     .WithTags("Static News");
 
-
 //Update specif Record
 app.MapPut(
         "/staticNews/{id}",
@@ -122,6 +121,46 @@ app.MapPut(
             varNews.Title = UpdateNewsListStatic.Title;
             varNews.Content = UpdateNewsListStatic.Content;
 
+            return Results.Ok(varNews);
+        }
+    )
+    .WithTags("Static News");
+
+//Add New News
+
+app.MapPost(
+        "/staticNews",
+        (NewsListStatic NewNewsListStatic) =>
+        {
+            if (NewNewsListStatic.Id != 0 || string.IsNullOrEmpty(NewNewsListStatic.Title))
+            {
+                return Results.BadRequest("Invalid Id or HowTo filling");
+            }
+            if (
+                varNewslist.FirstOrDefault(
+                    c => c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
+                ) != null
+            )
+            {
+                return Results.BadRequest("HowTo Exsists");
+            }
+
+            NewNewsListStatic.Id = varNewslist.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
+            varNewslist.Add(NewNewsListStatic);
+            return Results.Ok(varNewslist);
+        }
+    )
+    .WithTags("Static News");
+
+//Delete Specific News
+app.MapDelete(
+        "/staticNews/{id}",
+        (int id) =>
+        {
+            var varNews = varNewslist.Find(c => c.Id == id);
+            if (varNews == null)
+                return Results.NotFound("Sorry this News doesn't exsists");
+            varNewslist.Remove(varNews);
             return Results.Ok(varNews);
         }
     )
