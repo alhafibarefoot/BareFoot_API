@@ -48,12 +48,12 @@ builder.Services.AddSwaggerGen(c =>
         }
     );
 
-    // var filePath = Path.Combine(AppContext.BaseDirectory, "SwaggerAnnotation.xml");
-    // c.IncludeXmlComments(filePath);
+     var filePath = Path.Combine(AppContext.BaseDirectory, "MinAPI.xml");
+     c.IncludeXmlComments(filePath);
 
     // using System.Reflection;
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    //var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+   // c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
@@ -176,7 +176,8 @@ app.MapDelete(
             return Results.Ok(varNews);
         }
     )
-    .WithTags("Static News");
+    .WithTags("Static News")
+    .WithName("DeleteNews");
 
 //*******************************************************************************************
 
