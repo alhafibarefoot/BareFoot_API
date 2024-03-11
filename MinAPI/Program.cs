@@ -48,12 +48,13 @@ builder.Services.AddSwaggerGen(c =>
         }
     );
 
-     var filePath = Path.Combine(AppContext.BaseDirectory, "MinAPI.xml");
-     c.IncludeXmlComments(filePath);
+
 
     // using System.Reflection;
-    //var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-   // c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    //  var filePath = Path.Combine(AppContext.BaseDirectory, "MinAPI.xml");
+    //  c.IncludeXmlComments(filePath);
 });
 
 var app = builder.Build();
