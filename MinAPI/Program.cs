@@ -48,8 +48,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     );
 
-
-
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
@@ -71,7 +69,7 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot API V1");
         options.RoutePrefix = "swagger";
-       // options.RoutePrefix = string.Empty;  //direct root
+        // options.RoutePrefix = string.Empty;  //direct root
         options.InjectStylesheet("/css/swagger.css");
     });
 }
@@ -104,7 +102,13 @@ app.MapGet(
             return Results.Ok(varNewslist);
         }
     )
-    .WithTags("Static News");
+    .WithName("GetNews")
+    .WithOpenApi(x => new OpenApiOperation(x)
+    {
+        Summary = "إحضار آخر الأخبار",
+        Description = "Returns information about all the available news from the Alhafi Blog.",
+        Tags = new List<OpenApiTag> { new() { Name = "Static News" } }
+    });
 
 //Get specif Record
 app.MapGet(
@@ -196,7 +200,6 @@ app.MapDelete(
         }
     )
     .WithTags("Static News");
-
 
 //*******************************************************************************************
 
