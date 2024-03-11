@@ -71,6 +71,7 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "BareFoot API V1");
         options.RoutePrefix = "swagger";
+       // options.RoutePrefix = string.Empty;  //direct root
         options.InjectStylesheet("/css/swagger.css");
     });
 }
@@ -135,7 +136,24 @@ app.MapPut(
     )
     .WithTags("Static News");
 
-//Add New News
+/// <summary>
+/// Creates a News.
+/// </summary>
+/// <param name="NewNewsListStatic"></param>
+/// <returns>A newly created News Item</returns>
+/// <remarks>
+/// Sample request:
+///
+///     POST /Todo
+///     {
+///        "id": 1,
+///        "Title": "F1 News",
+///        "Content": "Fi car go Fast"
+///     }
+///
+/// </remarks>
+/// <response code="201">Returns the newly created item</response>
+/// <response code="400">If the item is null</response>
 
 app.MapPost(
         "/staticNews",
@@ -177,8 +195,8 @@ app.MapDelete(
             return Results.Ok(varNews);
         }
     )
-    .WithTags("Static News")
-    .WithName("DeleteNews");
+    .WithTags("Static News");
+
 
 //*******************************************************************************************
 
