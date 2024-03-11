@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +47,13 @@ builder.Services.AddSwaggerGen(c =>
             TermsOfService = new("https://www.alhafi.org/")
         }
     );
+
+    // var filePath = Path.Combine(AppContext.BaseDirectory, "SwaggerAnnotation.xml");
+    // c.IncludeXmlComments(filePath);
+
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
@@ -137,8 +145,8 @@ app.MapPost(
                 return Results.BadRequest("Invalid Id or HowTo filling");
             }
             if (
-                varNewslist.FirstOrDefault(
-                    c => c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
+                varNewslist.FirstOrDefault(c =>
+                    c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
                 ) != null
             )
             {
@@ -152,7 +160,11 @@ app.MapPost(
     )
     .WithTags("Static News");
 
-//Delete Specific News
+/// <summary>
+///Delete Specific News.
+/// </summary>
+/// <param name="id"></param>
+/// <returns></returns>
 app.MapDelete(
         "/staticNews/{id}",
         (int id) =>
@@ -173,6 +185,11 @@ app.Run();
 record NewsListStatic
 {
     public int Id { get; set; }
+
+    /// <summary>
+    /// Title is Any headline news
+    /// </summary>
+    /// <example>"Oscar 2024"</example>
     public string? Title { get; set; }
     public string? Content { get; set; }
 }
