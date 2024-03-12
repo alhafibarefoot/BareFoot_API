@@ -1,5 +1,7 @@
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MinAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +26,10 @@ var varNewslist = new List<NewsListStatic>
 // Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDbContext>(x =>
+    x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 builder.Services.AddSwaggerGen(c =>
 {
