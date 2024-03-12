@@ -8,6 +8,6 @@ namespace MinAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
 
-        public DbSet<Post> posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }
