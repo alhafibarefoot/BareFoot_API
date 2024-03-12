@@ -95,7 +95,7 @@ app.MapPut("/hello", () => "[PUT] Hello World!").WithTags("Hello");
 app.MapDelete("/hello", () => "[DELETE] Hello World!").WithTags("Hello");
 
 //*****************Static Record End Points(Data Will not save after close )*****************
-//Get All record
+
 app.MapGet(
         "/staticNews",
         () =>
@@ -103,15 +103,14 @@ app.MapGet(
             return Results.Ok(varNewslist);
         }
     )
-    .WithName("GetNews")
     .WithOpenApi(x => new OpenApiOperation(x)
     {
-        Summary = "إحضار آخر الأخبار",
+        Summary = "إحضار جميع الأخبار",
         Description = "Returns information about all the available news from the Alhafi Blog.",
         Tags = new List<OpenApiTag> { new() { Name = "Static News" } }
     });
 
-//Get specif Record
+
 app.MapGet(
         "/staticNews/{id}",
         (int id) =>
