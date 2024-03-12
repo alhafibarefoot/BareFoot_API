@@ -49,10 +49,11 @@ builder.Services.AddSwaggerGen(c =>
     );
 
     // using System.Reflection;
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    //  var filePath = Path.Combine(AppContext.BaseDirectory, "MinAPI.xml");
-    //  c.IncludeXmlComments(filePath);
+    var fileName = typeof(Program).Assembly.GetName().Name + ".xml";
+    var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+
+    // integrate xml comments
+    c.IncludeXmlComments(filePath);
 });
 
 var app = builder.Build();
