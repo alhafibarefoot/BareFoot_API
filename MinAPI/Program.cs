@@ -110,7 +110,6 @@ app.MapGet(
         Tags = new List<OpenApiTag> { new() { Name = "Static News" } }
     });
 
-
 app.MapGet(
         "/staticNews/{id}",
         (int id) =>
@@ -121,7 +120,11 @@ app.MapGet(
             return Results.Ok(varNews);
         }
     )
-    .WithTags("Static News");
+    .WithDescription("return one news ")
+    .WithSummary("إحضار خبر واحد بناء على قيمة رقم السجل")
+    .WithName("GetStaticNewsbyID")
+    .WithTags("Static News")
+    .WithOpenApi();
 
 //Update specif Record
 app.MapPut(
