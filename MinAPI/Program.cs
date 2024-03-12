@@ -213,7 +213,15 @@ record NewsListStatic
     /// <summary>
     /// Title is Any headline news
     /// </summary>
-    /// <example>"Oscar 2024"</example>
+    /// <example>Formula One World Championship</example>
     public string? Title { get; set; }
+
+    /// <summary>
+    /// Contenty contain details of the news
+    /// </summary>
+    /// <example>
+    ///  2024 FIA Formula One World Championship is a motor racing championship
+    ///  for Formula One cars and is the 75th running of the Formula One World Championship.
+    /// </example>
     public string? Content { get; set; }
 }
