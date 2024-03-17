@@ -11,7 +11,6 @@ namespace MinAPI.Data.Profiles
             //source==>Targetr
             CreateMap<Post, PostReadDto>();
             CreateMap<PostNewOrUpdatedDto, Post>().ReverseMap();
-
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
+using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<AppDbContext>(x =>
     x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -224,7 +228,6 @@ app.MapGet(
     .WithTags("DBContext")
     .WithOpenApi();
 
-
 app.MapGet(
         "/posts/{id}",
         async (AppDbContext context, int id) =>
@@ -242,7 +245,6 @@ app.MapGet(
     .WithTags("DBContext")
     .WithOpenApi();
 
-
 app.MapPost(
         "/posts/{id}",
         async (AppDbContext context, Post poss) =>
@@ -256,7 +258,6 @@ app.MapPost(
     .WithSummary("ادخال خبر جديد ")
     .WithTags("DBContext")
     .WithOpenApi();
-
 
 app.MapPut(
         "/posts/{id}",
