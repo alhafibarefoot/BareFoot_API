@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MinAPI.Data.Model;
+using MinAPI.Data.Models;
 
 namespace MinAPI.Data
 {

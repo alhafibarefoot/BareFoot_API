@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MinAPI.Data.Model
+namespace MinAPI.Data.Models
 {
     public class Post
     {
