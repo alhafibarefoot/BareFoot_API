@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
+using MinAPI.Data.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -209,9 +210,100 @@ app.MapDelete(
     )
     .WithTags("Static News");
 
-//*******************************************************************************************
+//*************************Dynamic Data -Repository- Data Access(DB Context) EndPoint**************************
+
+app.MapGet(
+        "/posts",
+        async (AppDbContext context) =>
+        {
+            var commands = await context.Posts.ToListAsync();
+            return Results.Ok(commands);
+        }
+    )
+    .WithDescription("return All posts news ")
+    .WithSummary("احضار جميع الأخبار")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+
+app.MapGet(
+        "/posts/{id}",
+        async (AppDbContext context, int id) =>
+        {
+            var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
+            if (varPost != null)
+            {
+                return Results.Ok(varPost);
+            }
+            return Results.NotFound();
+        }
+    )
+    .WithDescription("return Only One Post News")
+    .WithSummary("احضار خبر واحد ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+
+app.MapPost(
+        "/posts/{id}",
+        async (AppDbContext context, Post poss) =>
+        {
+            await context.Posts.AddAsync(poss);
+            await context.SaveChangesAsync();
+            return Results.Created($"/posts/{poss.Id}", poss);
+        }
+    )
+    .WithDescription("Insert New Post News")
+    .WithSummary("ادخال خبر جديد ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+
+app.MapPut(
+        "/posts/{id}",
+        async (AppDbContext context, int id, Post poss) =>
+        {
+            var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
+            if (varPost != null)
+            {
+                varPost.Title = poss.Title;
+                varPost.Content = poss.Content;
+                varPost.postImage = poss.postImage;
+                await context.SaveChangesAsync();
+                return Results.NoContent();
+            }
+            return Results.NotFound();
+        }
+    )
+    .WithDescription("Update Post News")
+    .WithSummary("تعديل خبر  ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+app.MapDelete(
+        "/posts/{id}",
+        async (AppDbContext context, int id) =>
+        {
+            var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
+            if (varPost != null)
+            {
+                context.Posts.Remove(varPost);
+                await context.SaveChangesAsync();
+                return Results.NoContent();
+            }
+            return Results.NotFound();
+        }
+    )
+    .WithDescription("Delete  Post ")
+    .WithSummary("حذف خبر  ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+//**************************************************************************************
 
 app.Run();
+
+//*************************End of Programs.cs*******************************************
 
 record NewsListStatic
 {
