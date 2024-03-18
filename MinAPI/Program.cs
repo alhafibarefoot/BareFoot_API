@@ -1,8 +1,10 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
+using static MinAPI.Data.DTOs.PostDTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -219,8 +221,8 @@ app.MapGet(
         "/posts",
         async (AppDbContext context) =>
         {
-            var commands = await context.Posts.ToListAsync();
-            return Results.Ok(commands);
+            var varPosts = await context.Posts.ToListAsync();
+            return Results.Ok(varPosts);
         }
     )
     .WithDescription("return All posts news ")
@@ -299,11 +301,43 @@ app.MapDelete(
     .WithTags("DBContext")
     .WithOpenApi();
 
-//**************************************************************************************
+//*************************Daynamic Data Access Automapper End Point*******************************************
+
+app.MapGet(
+        "/v1/posts",
+        async (IPostRepo repo, IMapper mapper) =>
+        {
+            var varPosts = await repo.GetAllPosts();
+            return Results.Ok(mapper.Map<IEnumerable<PostReadDto>>(varPosts));
+        }
+    )
+    .WithDescription("return All posts news ")
+    .WithSummary("احضار جميع الأخبار")
+    .WithTags("AutoMapper")
+    .WithOpenApi();
+
+app.MapGet(
+        "/v1/posts/{id}",
+        async (IPostRepo repo, IMapper mapper, int id) =>
+        {
+            var varPost = await repo.GetPostById(id);
+            if (varPost != null)
+            {
+                return Results.Ok(mapper.Map<PostReadDto>(varPost));
+            }
+            return Results.NotFound();
+        }
+    )
+    .WithDescription("return Only One Post News")
+    .WithSummary("احضار خبر واحد ")
+    .WithTags("AutoMapper")
+    .WithOpenApi();
+
+//******************************************************************************************
 
 app.Run();
 
-//*************************End of Programs.cs*******************************************
+//*************************End of Programs.cs***********************************************
 
 record NewsListStatic
 {
