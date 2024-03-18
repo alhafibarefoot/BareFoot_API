@@ -6,7 +6,7 @@ namespace MinAPI.Data.Profiles
 {
     public class PostProfile : Profile
     {
-        protected PostProfile()
+        public PostProfile()
         {
             //source==>Targetr
             CreateMap<Post, PostReadDto>();

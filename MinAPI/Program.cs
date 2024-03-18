@@ -218,7 +218,7 @@ app.MapDelete(
 //*************************Dynamic Data -Repository- Data Access(DB Context) EndPoint**************************
 
 app.MapGet(
-        "/posts",
+        "/dbcontext/posts",
         async (AppDbContext context) =>
         {
             var varPosts = await context.Posts.ToListAsync();
@@ -231,7 +231,7 @@ app.MapGet(
     .WithOpenApi();
 
 app.MapGet(
-        "/posts/{id}",
+        "/dbcontext/posts/{id}",
         async (AppDbContext context, int id) =>
         {
             var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
@@ -248,7 +248,7 @@ app.MapGet(
     .WithOpenApi();
 
 app.MapPost(
-        "/posts/{id}",
+        "/dbcontext/posts/{id}",
         async (AppDbContext context, Post poss) =>
         {
             await context.Posts.AddAsync(poss);
@@ -262,7 +262,7 @@ app.MapPost(
     .WithOpenApi();
 
 app.MapPut(
-        "/posts/{id}",
+        "/dbcontext/posts/{id}",
         async (AppDbContext context, int id, Post poss) =>
         {
             var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
@@ -283,7 +283,7 @@ app.MapPut(
     .WithOpenApi();
 
 app.MapDelete(
-        "/posts/{id}",
+        "/dbcontext/posts/{id}",
         async (AppDbContext context, int id) =>
         {
             var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
@@ -304,7 +304,7 @@ app.MapDelete(
 //*************************Daynamic Data Access Automapper End Point*******************************************
 
 app.MapGet(
-        "/v1/posts",
+        "/automapper/posts",
         async (IPostRepo repo, IMapper mapper) =>
         {
             var varPosts = await repo.GetAllPosts();
@@ -317,7 +317,7 @@ app.MapGet(
     .WithOpenApi();
 
 app.MapGet(
-        "/v1/posts/{id}",
+        "/automapper/posts/{id}",
         async (IPostRepo repo, IMapper mapper, int id) =>
         {
             var varPost = await repo.GetPostById(id);
@@ -330,6 +330,22 @@ app.MapGet(
     )
     .WithDescription("return Only One Post News")
     .WithSummary("احضار خبر واحد ")
+    .WithTags("AutoMapper")
+    .WithOpenApi();
+
+app.MapPost(
+        "/automapper/posts",
+        async (IPostRepo repo, IMapper mapper, PostNewOrUpdatedDto postCreateDto) =>
+        {
+            var postModel = mapper.Map<Post>(postCreateDto);
+            await repo.CreatePost(postModel);
+            await repo.SaveChanges();
+            var postReadDto = mapper.Map<PostReadDto>(postModel);
+            return Results.Created($"/automapper/posts/{postReadDto.Id}", postReadDto);
+        }
+    )
+    .WithDescription("Insert New Post News")
+    .WithSummary("ادخال خبر جديد ")
     .WithTags("AutoMapper")
     .WithOpenApi();
 
