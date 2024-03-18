@@ -349,6 +349,25 @@ app.MapPost(
     .WithTags("AutoMapper")
     .WithOpenApi();
 
+app.MapPut(
+        "/automapper/posts/{id}",
+        async (IPostRepo repo, IMapper mapper, int id, PostNewOrUpdatedDto postUpdateDto) =>
+        {
+            var varPost = await repo.GetPostById(id);
+            if (varPost == null)
+            {
+                return Results.NotFound();
+            }
+            mapper.Map(postUpdateDto, varPost);
+            await repo.SaveChanges();
+            return Results.NoContent();
+        }
+    )
+    .WithDescription("Update Post News")
+    .WithSummary("تعديل خبر  ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
 //******************************************************************************************
 
 app.Run();
