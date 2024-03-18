@@ -365,7 +365,26 @@ app.MapPut(
     )
     .WithDescription("Update Post News")
     .WithSummary("تعديل خبر  ")
-    .WithTags("DBContext")
+    .WithTags("AutoMapper")
+    .WithOpenApi();
+
+app.MapDelete(
+        "/automapper/posts/{id}",
+        async (IPostRepo repo, IMapper mapper, int id) =>
+        {
+            var varPost = await repo.GetPostById(id);
+            if (varPost == null)
+            {
+                return Results.NotFound();
+            }
+            repo.DeletePost(varPost);
+            await repo.SaveChanges();
+            return Results.NoContent();
+        }
+    )
+    .WithDescription("Delete  Post ")
+    .WithSummary("حذف خبر  ")
+    .WithTags("AutoMapper")
     .WithOpenApi();
 
 //******************************************************************************************

@@ -17,8 +17,8 @@ namespace MinAPI.Data.DTOs
 
         public class PostNewOrUpdatedDto
         {
-            [Key]
-            public int Id { get; set; }
+            // [Key]
+            // public int Id { get; set; }
 
             [Required]
             [MinLength(3)]
