@@ -7,7 +7,6 @@ using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 using static MinAPI.Data.DTOs.PostDTOs;
-using static MinAPI.Data.Models.Post;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -257,7 +256,7 @@ app.MapPost(
         "/dbcontext/posts",
         async (AppDbContext context, Post poss, IValidator<Post> validator) =>
         {
-            var validationResult = validator.Validate(poss);
+            var validationResult = await validator.ValidateAsync(poss);
 
             if (validationResult.IsValid)
             {
