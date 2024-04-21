@@ -8,6 +8,7 @@ namespace MinAPI.Data.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(25)]
         public string? Title { get; set; }
 
         public string? Content { get; set; }
