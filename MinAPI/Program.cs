@@ -1,10 +1,13 @@
+using System.Net;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 using static MinAPI.Data.DTOs.PostDTOs;
+using static MinAPI.Data.Models.Post;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,9 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IPostRepo, PostRepo>();
+
+//builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -248,12 +254,21 @@ app.MapGet(
     .WithOpenApi();
 
 app.MapPost(
-        "/dbcontext/posts/{id}",
-        async (AppDbContext context, Post poss) =>
+        "/dbcontext/posts",
+        async (AppDbContext context, Post poss, IValidator<Post> validator) =>
         {
-            await context.Posts.AddAsync(poss);
-            await context.SaveChangesAsync();
-            return Results.Created($"/posts/{poss.Id}", poss);
+            var validationResult = validator.Validate(poss);
+
+            if (validationResult.IsValid)
+            {
+                await context.Posts.AddAsync(poss);
+                await context.SaveChangesAsync();
+                return Results.Created($"/posts/{poss.Id}", poss);
+            }
+            return Results.ValidationProblem(
+                validationResult.ToDictionary(),
+                statusCode: (int)HttpStatusCode.UnprocessableEntity
+            );
         }
     )
     .WithDescription("Insert New Post News")
