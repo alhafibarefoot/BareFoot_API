@@ -42,12 +42,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 //builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
-builder.Services.AddScoped<IValidator<Post>, PostValidator>();
-builder.Services.AddScoped<IValidator<PostNewOrUpdatedDto>, PostNewOrUpdatedDtoValidator>();
+//builder.Services.AddScoped<IValidator<Post>, PostValidator>();
+//builder.Services.AddScoped<IValidator<PostNewOrUpdatedDto>, PostNewOrUpdatedDtoValidator>();
 
 
 
-//builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddSwaggerGen(c =>
 {
