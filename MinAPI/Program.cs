@@ -43,6 +43,9 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 //builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
 builder.Services.AddScoped<IValidator<Post>, PostValidator>();
+builder.Services.AddScoped<IValidator<PostNewOrUpdatedDto>, PostNewOrUpdatedDtoValidator>();
+
+
 
 //builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
@@ -368,7 +371,7 @@ app.MapGet(
 
 app.MapPost(
         "/automapper/posts",
-        async (IPostRepo repo, IMapper mapper, PostNewOrUpdatedDto postCreateDto) =>
+        async (IPostRepo repo, IMapper mapper, [FromBody] PostNewOrUpdatedDto postCreateDto) =>
         {
             var postModel = mapper.Map<Post>(postCreateDto);
             await repo.CreatePost(postModel);
@@ -377,6 +380,7 @@ app.MapPost(
             return Results.Created($"/automapper/posts/{postReadDto.Id}", postReadDto);
         }
     )
+    .AddEndpointFilter<ValidationFilter<PostNewOrUpdatedDto>>()
     .WithDescription("Insert New Post News")
     .WithSummary("ادخال خبر جديد ")
     .WithTags("AutoMapper")

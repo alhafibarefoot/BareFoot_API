@@ -6,29 +6,33 @@ namespace MinAPI.Validations
     public class ValidationFilter<T> : IEndpointFilter
     {
         public async ValueTask<object?> InvokeAsync(
-            EndpointFilterInvocationContext context,
+            EndpointFilterInvocationContext ctx,
             EndpointFilterDelegate next
         )
         {
-            T? argToValidate = context.GetArgument<T>(0);
-            IValidator<T>? validator = context.HttpContext.RequestServices.GetService<
-                IValidator<T>
-            >();
-
+            var validator = ctx.HttpContext.RequestServices.GetService<IValidator<T>>();
             if (validator is not null)
             {
-                var validationResult = await validator.ValidateAsync(argToValidate!);
-                if (!validationResult.IsValid)
+                var entity = ctx.Arguments.OfType<T>()
+                    .FirstOrDefault(a => a?.GetType() == typeof(T));
+                if (entity is not null)
                 {
+                    var validation = await validator.ValidateAsync(entity);
+                    if (validation.IsValid)
+                    {
+                        return await next(ctx);
+                    }
                     return Results.ValidationProblem(
-                        validationResult.ToDictionary(),
+                        validation.ToDictionary(),
                         statusCode: (int)HttpStatusCode.UnprocessableEntity
                     );
                 }
+                else
+                {
+                    return Results.Problem("Could not find type to validate");
+                }
             }
-
-            // Otherwise invoke the next filter in the pipeline
-            return await next.Invoke(context);
+            return await next(ctx);
         }
     }
 }
