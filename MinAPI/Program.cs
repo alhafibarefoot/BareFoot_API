@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
+using MinAPI.Validations;
 using static MinAPI.Data.DTOs.PostDTOs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +41,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 //builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
-builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
+builder.Services.AddScoped<IValidator<Post>, PostValidator>();
+//builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddSwaggerGen(c =>
 {

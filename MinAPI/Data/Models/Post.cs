@@ -16,9 +16,9 @@ namespace MinAPI.Data.Models
 
         public string? postImage { get; set; }
 
-        public class Validator  : AbstractValidator<Post>
+        public class Validator : AbstractValidator<Post>
         {
-            public Validator ()
+            public Validator()
             {
                 RuleFor(p => p.Title)
                     .NotEmpty()
@@ -29,8 +29,6 @@ namespace MinAPI.Data.Models
                     .MaximumLength(25)
                     .WithMessage("Title Should not exceed 25 Character");
             }
-
-
         }
     }
 }

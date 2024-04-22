@@ -1,7 +1,7 @@
 using System.Net;
 using FluentValidation;
 
-namespace MinAPI.Data.Models
+namespace MinAPI.Validations
 {
     public class ValidationFilter<T> : IEndpointFilter
     {
