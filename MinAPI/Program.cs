@@ -1,6 +1,7 @@
 using System.Net;
 using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 //builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
 builder.Services.AddScoped<IValidator<Post>, PostValidator>();
+
 //builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddSwaggerGen(c =>
@@ -272,6 +274,21 @@ app.MapPost(
             );
         }
     )
+    .WithDescription("Insert New Post News")
+    .WithSummary("ادخال خبر جديد ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+app.MapPost(
+        "/dbcontext/posts/v2",
+        async (AppDbContext context, [FromBody] Post poss) =>
+        {
+            await context.Posts.AddAsync(poss);
+            await context.SaveChangesAsync();
+            return Results.Created($"/posts/{poss.Id}", poss);
+        }
+    )
+    .AddEndpointFilter<ValidationFilter<Post>>()
     .WithDescription("Insert New Post News")
     .WithSummary("ادخال خبر جديد ")
     .WithTags("DBContext")
