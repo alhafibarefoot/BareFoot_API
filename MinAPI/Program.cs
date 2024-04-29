@@ -118,6 +118,15 @@ app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
 app.MapPut("/hello", () => "[PUT] Hello World!").WithTags("Hello");
 app.MapDelete("/hello", () => "[DELETE] Hello World!").WithTags("Hello");
 
+app.MapGet(
+        "/hello/QueryString",
+        ([FromQuery] string name) =>
+        {
+            return $"Hello {name}";
+        }
+    )
+    .WithTags("Hello");
+
 //*****************Static Record End Points(Data Will not save after close )*****************
 
 app.MapGet(
@@ -298,7 +307,7 @@ app.MapPost(
     .WithTags("DBContext")
     .WithOpenApi();
 
-    app.MapPost(
+app.MapPost(
         "/dbcontext/posts/v3",
         async (AppDbContext context, [ModelBinder(typeof(PostModelBinder))] Post poss) =>
         {
