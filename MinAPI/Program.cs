@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
+using MinAPI.Data.Bindings;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 using MinAPI.Validations;
@@ -292,6 +293,20 @@ app.MapPost(
         }
     )
     .AddEndpointFilter<ValidationFilter<Post>>()
+    .WithDescription("Insert New Post News")
+    .WithSummary("ادخال خبر جديد ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+    app.MapPost(
+        "/dbcontext/posts/v3",
+        async (AppDbContext context, [ModelBinder(typeof(PostModelBinder))] Post poss) =>
+        {
+            await context.Posts.AddAsync(poss);
+            await context.SaveChangesAsync();
+            return Results.Created($"/posts/{poss.Id}", poss);
+        }
+    )
     .WithDescription("Insert New Post News")
     .WithSummary("ادخال خبر جديد ")
     .WithTags("DBContext")
