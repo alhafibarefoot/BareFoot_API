@@ -47,7 +47,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 //builder.Services.AddScoped<IValidator<PostNewOrUpdatedDto>, PostNewOrUpdatedDtoValidator>();
 
 
-
+builder.Services.AddSingleton<IDateTime, SystemDateTime>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddSwaggerGen(c =>
@@ -126,6 +126,9 @@ app.MapGet(
         }
     )
     .WithTags("Hello");
+
+    app.MapGet("/Demo",   (IDateTime dateTime) => dateTime.Now);
+    app.MapGet("/Demo2", ([FromServices] IDateTime dateTime) => dateTime.Now);
 
 //*****************Static Record End Points(Data Will not save after close )*****************
 
@@ -358,6 +361,19 @@ app.MapDelete(
     )
     .WithDescription("Delete  Post ")
     .WithSummary("حذف خبر  ")
+    .WithTags("DBContext")
+    .WithOpenApi();
+
+
+app.MapGet(
+        "/display",
+        ([AsParameters] Post post) =>
+        {
+            return $"Title: {post.Title}, Content: {post.Content}";
+        }
+    )
+    .WithDescription("View  Post ")
+    .WithSummary("عرض خبر  ")
     .WithTags("DBContext")
     .WithOpenApi();
 
