@@ -13,6 +13,9 @@ using static MinAPI.Data.DTOs.PostDTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//******************************************************* Service Points *****************************************************
+
 //Creating Variables of Lists
 var varNewslist = new List<NewsListStatic>
 {
@@ -80,8 +83,13 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(filePath);
 });
 
+//******************************************************* Ending Service Points *****************************************************
+
 var app = builder.Build();
 
+
+
+//******************************************************* Middle Points *****************************************************
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -111,7 +119,12 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-//*************************Static Hello End Point*******************************************
+//******************************************************* Ending Middle Points *****************************************************
+
+
+//******************************************************* End Points *****************************************************
+
+//*************************Static Sample Hello*******************************************
 
 app.MapGet("/hello", () => "[GET] Hello World!").WithTags("Hello");
 app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
@@ -464,7 +477,7 @@ app.MapDelete(
     .WithTags("AutoMapper")
     .WithOpenApi();
 
-//******************************************************************************************
+//******************************************************* Ending End Point *****************************************************
 
 app.Run();
 
