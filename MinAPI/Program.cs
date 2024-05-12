@@ -16,6 +16,8 @@ using static MinAPI.Data.DTOs.PostDTOs;
 //******************************************************* Var Zone *****************************************************
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
 
 //Creating Variables of Lists
