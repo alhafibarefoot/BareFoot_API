@@ -11,10 +11,12 @@ using MinAPI.Data.Models;
 using MinAPI.Validations;
 using static MinAPI.Data.DTOs.PostDTOs;
 
+
+
+//******************************************************* Service Zone *****************************************************
+
 var builder = WebApplication.CreateBuilder(args);
-
-
-//******************************************************* Service Points *****************************************************
+var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
 
 //Creating Variables of Lists
 var varNewslist = new List<NewsListStatic>
@@ -83,13 +85,13 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(filePath);
 });
 
-//******************************************************* Ending Service Points *****************************************************
+//******************************************************* Ending Service Zone *****************************************************
 
 var app = builder.Build();
-var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
 
 
-//******************************************************* Middle Points *****************************************************
+
+//******************************************************* Middle Points Zone *****************************************************
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -122,10 +124,10 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-//******************************************************* Ending Middle Points *****************************************************
+//******************************************************* Ending Middle Points  *****************************************************
 
 
-//******************************************************* End Points *****************************************************
+//******************************************************* End Points Zone *****************************************************
 
 //*************************Static Sample Hello*******************************************
 
