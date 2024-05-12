@@ -86,13 +86,14 @@ builder.Services.AddSwaggerGen(c =>
 //******************************************************* Ending Service Points *****************************************************
 
 var app = builder.Build();
-
+var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
 
 
 //******************************************************* Middle Points *****************************************************
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger(options =>
     {
         options.RouteTemplate = "swagger/{documentName}/swagger.json";
@@ -108,10 +109,12 @@ if (app.Environment.IsDevelopment())
 }
 if (app.Environment.IsStaging())
 {
+
     // your code here
 }
 if (app.Environment.IsProduction())
 {
+
     // your code here
 }
 
@@ -125,6 +128,8 @@ app.UseStaticFiles();
 //******************************************************* End Points *****************************************************
 
 //*************************Static Sample Hello*******************************************
+
+app.MapGet("/",()=>varMyEnv);
 
 app.MapGet("/hello", () => "[GET] Hello World!").WithTags("Hello");
 app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
