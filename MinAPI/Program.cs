@@ -58,6 +58,27 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddSingleton<IDateTime, SystemDateTime>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
+ builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "MyAllowedOrigins",
+                policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "https://localhost/*",
+                            "http://localhost/*",
+                            "http://127.0.0.1/*",
+                            "https://www.alhafi.org"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+            );
+        });
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
@@ -126,6 +147,8 @@ if (app.Environment.IsProduction())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseCors("MyAllowedOrigins");
 
 //******************************************************* Ending Middle Points  *****************************************************
 
