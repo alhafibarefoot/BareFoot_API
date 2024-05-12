@@ -13,7 +13,7 @@ using static MinAPI.Data.DTOs.PostDTOs;
 
 
 
-//******************************************************* Service Zone *****************************************************
+//******************************************************* Var Zone *****************************************************
 
 var builder = WebApplication.CreateBuilder(args);
 var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
@@ -35,8 +35,9 @@ var varNewslist = new List<NewsListStatic>
             "Former South Carolina Gov. Nikki Haley will win the Republican presidential primary in Washington, DC"
     },
 };
+//******************************************************* Ending Var Zone *****************************************************
 
-// Add services to the container.
+//******************************************************* Services  Zone *****************************************************
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -91,8 +92,8 @@ var app = builder.Build();
 
 
 
-//******************************************************* Middle Points Zone *****************************************************
-// Configure the HTTP request pipeline.
+//******************************************************* Middle Points Zone( HTTP request pipeline) ***************************************************
+
 if (app.Environment.IsDevelopment())
 {
 
