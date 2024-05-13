@@ -152,17 +152,19 @@ app.UseOutputCache();
 
 //******************************************************* End Points Zone *****************************************************
 
+var postHelloEndPoints=app.MapGroup("/hello");
+
 //*************************Static Sample Hello*******************************************
 
 app.MapGet("/", () => varMyEnv);
 
-app.MapGet("/hello", () => "[GET] Hello World!").WithTags("Hello");
-app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
-app.MapPut("/hello", () => "[PUT] Hello World!").WithTags("Hello");
-app.MapDelete("/hello", () => "[DELETE] Hello World!").WithTags("Hello");
+postHelloEndPoints.MapGet("/", () => "[GET] Hello World!").WithTags("Hello");
+postHelloEndPoints.MapPost("/", () => "[POST] Hello World!").WithTags("Hello");
+postHelloEndPoints.MapPut("/", () => "[PUT] Hello World!").WithTags("Hello");
+postHelloEndPoints.MapDelete("/", () => "[DELETE] Hello World!").WithTags("Hello");
 
-app.MapGet(
-        "/hello/QueryString",
+postHelloEndPoints.MapGet(
+        "/QueryString",
         ([FromQuery] string name) =>
         {
             return $"Hello {name}";
