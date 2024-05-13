@@ -9,6 +9,7 @@ using MinAPI.Data;
 using MinAPI.Data.Bindings;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
+using MinAPI.EndPoints;
 using MinAPI.Validations;
 using static MinAPI.Data.DTOs.PostDTOs;
 
@@ -152,25 +153,13 @@ app.UseOutputCache();
 
 //******************************************************* End Points Zone *****************************************************
 
-var postHelloEndPoints=app.MapGroup("/hello") .WithTags("Hello");
 
+//var postHelloEndPoints=app.MapGroup("/hello") .WithTags("Hello");
 
 //*************************Static Sample Hello*******************************************
 
 
-
-postHelloEndPoints.MapGet("/", () => "[GET] Hello World!");
-postHelloEndPoints.MapPost("/", () => "[POST] Hello World!");
-postHelloEndPoints.MapPut("/", () => "[PUT] Hello World!");
-postHelloEndPoints.MapDelete("/", () => "[DELETE] Hello World!");
-
-postHelloEndPoints.MapGet(
-        "/QueryString",
-        ([FromQuery] string name) =>
-        {
-            return $"Hello {name}";
-        }
-    );
+app.MapGroup("/hello").MapHello().WithTags("Hello");
 
 app.MapGet("/", () => varMyEnv);
 app.MapGet("/Demo", (IDateTime dateTime) => dateTime.Now);
