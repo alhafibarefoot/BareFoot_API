@@ -19,24 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var varMyEnv = builder.Configuration.GetValue<string>("myEnv");
 
-//Creating Variables of Lists
-var varNewslist = new List<NewsListStatic>
-{
-    new NewsListStatic
-    {
-        Id = 1,
-        Title = "F1 News",
-        Content = "Christian Horner Surprised By Team Strategy At Bahrain GP ."
-    },
-    new NewsListStatic
-    {
-        Id = 2,
-        Title = "Haley will win",
-        Content =
-            "Former South Carolina Gov. Nikki Haley will win the Republican presidential primary in Washington, DC"
-    },
-};
-
 //******************************************************* Ending Var Zone *****************************************************
 
 //******************************************************* Services  Zone *****************************************************
@@ -153,127 +135,18 @@ app.UseOutputCache();
 
 //******************************************************* End Points Zone *****************************************************
 
-
-//var postHelloEndPoints=app.MapGroup("/hello") .WithTags("Hello");
-
 //*************************Static Sample Hello*******************************************
 
 
-app.MapGroup("/hello").MapHello().WithTags("Hello");
+app.MapGet("/", () => varMyEnv).WithTags("Demo");
+app.MapGet("/Demo", (IDateTime dateTime) => dateTime.Now).WithTags("Demo");
+app.MapGet("/Demo2", ([FromServices] IDateTime dateTime) => dateTime.Now).WithTags("Demo");
 
-app.MapGet("/", () => varMyEnv);
-app.MapGet("/Demo", (IDateTime dateTime) => dateTime.Now);
-app.MapGet("/Demo2", ([FromServices] IDateTime dateTime) => dateTime.Now);
+app.MapGroup("/hello").MapHello().WithTags("Hello");
 
 //*****************Static Record End Points(Data Will not save after close )*****************
 
-app.MapGet(
-        "/staticNews",
-        () =>
-        {
-            return Results.Ok(varNewslist);
-        }
-    )
-    .WithOpenApi(x => new OpenApiOperation(x)
-    {
-        Summary = "إحضار جميع الأخبار",
-        Description = "Returns information about all the available news from the Alhafi Blog.",
-        Tags = new List<OpenApiTag> { new() { Name = "Static News" } }
-    });
-
-app.MapGet(
-        "/staticNews/{id}",
-        (int id) =>
-        {
-            var varNews = varNewslist.Find(c => c.Id == id);
-            if (varNews == null)
-                return Results.NotFound("Sorry this News doesn't exsists");
-            return Results.Ok(varNews);
-        }
-    )
-    .WithDescription("return one news ")
-    .WithSummary("إحضار خبر واحد بناء على قيمة رقم السجل")
-    .WithName("GetStaticNewsbyID")
-    .WithTags("Static News")
-    .WithOpenApi();
-
-//Update specif Record
-app.MapPut(
-        "/staticNews/{id}",
-        (NewsListStatic UpdateNewsListStatic, int id) =>
-        {
-            var varNews = varNewslist.Find(c => c.Id == id);
-            if (varNews == null)
-                return Results.NotFound("Sorry this command doesn't exsists");
-
-            varNews.Title = UpdateNewsListStatic.Title;
-            varNews.Content = UpdateNewsListStatic.Content;
-
-            return Results.Ok(varNews);
-        }
-    )
-    .WithTags("Static News");
-
-/// <summary>
-/// Creates a News.
-/// </summary>
-/// <param name="NewNewsListStatic"></param>
-/// <returns>A newly created News Item</returns>
-/// <remarks>
-/// Sample request:
-///
-///     POST /Todo
-///     {
-///        "id": 1,
-///        "Title": "F1 News",
-///        "Content": "Fi car go Fast"
-///     }
-///
-/// </remarks>
-/// <response code="201">Returns the newly created item</response>
-/// <response code="400">If the item is null</response>
-
-app.MapPost(
-        "/staticNews",
-        (NewsListStatic NewNewsListStatic) =>
-        {
-            if (NewNewsListStatic.Id != 0 || string.IsNullOrEmpty(NewNewsListStatic.Title))
-            {
-                return Results.BadRequest("Invalid Id or HowTo filling");
-            }
-            if (
-                varNewslist.FirstOrDefault(c =>
-                    c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
-                ) != null
-            )
-            {
-                return Results.BadRequest("HowTo Exsists");
-            }
-
-            NewNewsListStatic.Id = varNewslist.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
-            varNewslist.Add(NewNewsListStatic);
-            return Results.Ok(varNewslist);
-        }
-    )
-    .WithTags("Static News");
-
-/// <summary>
-///Delete Specific News.
-/// </summary>
-/// <param name="id"></param>
-/// <returns></returns>
-app.MapDelete(
-        "/staticNews/{id}",
-        (int id) =>
-        {
-            var varNews = varNewslist.Find(c => c.Id == id);
-            if (varNews == null)
-                return Results.NotFound("Sorry this News doesn't exsists");
-            varNewslist.Remove(varNews);
-            return Results.Ok(varNews);
-        }
-    )
-    .WithTags("Static News");
+app.MapGroup("/StaticPost").MapStaticPost().WithTags("Static News");
 
 //*************************Dynamic Data -Repository- Data Access(DB Context) EndPoint**************************
 
