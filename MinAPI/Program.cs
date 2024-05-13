@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MinAPI.Data;
@@ -303,7 +304,7 @@ app.MapGet(
     .WithSummary("احضار جميع الأخبار")
     .WithTags("DBContext")
     .WithOpenApi()
-    .CacheOutput(c=>c.Expire(TimeSpan.FromSeconds(15)));
+    .CacheOutput(c=>c.Expire(TimeSpan.FromDays(360).tag("Post_Get")));
 
 app.MapGet(
         "/dbcontext/posts/{id}",
@@ -324,7 +325,7 @@ app.MapGet(
 
 app.MapPost(
         "/dbcontext/posts",
-        async (AppDbContext context, Post poss, IValidator<Post> validator) =>
+        async (AppDbContext context, Post poss, IValidator<Post> validator, IOutputCacheStore outputCacheRestore) =>
         {
             var validationResult = await validator.ValidateAsync(poss);
 
@@ -332,6 +333,7 @@ app.MapPost(
             {
                 await context.Posts.AddAsync(poss);
                 await context.SaveChangesAsync();
+                await outputCacheRestore.EvictByTagAsync("Post_Get",default);
                 return Results.Created($"/posts/{poss.Id}", poss);
             }
             return Results.ValidationProblem(
