@@ -12,14 +12,11 @@ using MinAPI.Data.Models;
 using MinAPI.Validations;
 using static MinAPI.Data.DTOs.PostDTOs;
 
-
-
 //******************************************************* Var Zone *****************************************************
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-var varMyEnv=builder.Configuration.GetValue<string>("myEnv");
+var varMyEnv = builder.Configuration.GetValue<string>("myEnv");
 
 //Creating Variables of Lists
 var varNewslist = new List<NewsListStatic>
@@ -38,6 +35,7 @@ var varNewslist = new List<NewsListStatic>
             "Former South Carolina Gov. Nikki Haley will win the Republican presidential primary in Washington, DC"
     },
 };
+
 //******************************************************* Ending Var Zone *****************************************************
 
 //******************************************************* Services  Zone *****************************************************
@@ -60,26 +58,26 @@ builder.Services.AddSingleton<IDateTime, SystemDateTime>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 builder.Services.AddOutputCache();
 
- builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "MyAllowedOrigins",
+        policy =>
         {
-            options.AddPolicy(
-                "MyAllowedOrigins",
-                policy =>
-                {
-                    policy
-                        .WithOrigins(
-                            "https://localhost/*",
-                            "http://localhost/*",
-                            "http://127.0.0.1/*",
-                            "https://www.alhafi.org"
-                        )
-                        .AllowAnyHeader()
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                }
-            );
-        });
+            policy
+                .WithOrigins(
+                    "https://localhost/*",
+                    "http://localhost/*",
+                    "http://127.0.0.1/*",
+                    "https://www.alhafi.org"
+                )
+                .AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    );
+});
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -115,13 +113,10 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
-
 //******************************************************* Middle Points Zone( HTTP request pipeline) ***************************************************
 
 if (app.Environment.IsDevelopment())
 {
-
     app.UseSwagger(options =>
     {
         options.RouteTemplate = "swagger/{documentName}/swagger.json";
@@ -137,12 +132,10 @@ if (app.Environment.IsDevelopment())
 }
 if (app.Environment.IsStaging())
 {
-
     // your code here
 }
 if (app.Environment.IsProduction())
 {
-
     // your code here
 }
 
@@ -161,7 +154,7 @@ app.UseOutputCache();
 
 //*************************Static Sample Hello*******************************************
 
-app.MapGet("/",()=>varMyEnv);
+app.MapGet("/", () => varMyEnv);
 
 app.MapGet("/hello", () => "[GET] Hello World!").WithTags("Hello");
 app.MapPost("/hello", () => "[POST] Hello World!").WithTags("Hello");
@@ -177,8 +170,8 @@ app.MapGet(
     )
     .WithTags("Hello");
 
-    app.MapGet("/Demo",   (IDateTime dateTime) => dateTime.Now);
-    app.MapGet("/Demo2", ([FromServices] IDateTime dateTime) => dateTime.Now);
+app.MapGet("/Demo", (IDateTime dateTime) => dateTime.Now);
+app.MapGet("/Demo2", ([FromServices] IDateTime dateTime) => dateTime.Now);
 
 //*****************Static Record End Points(Data Will not save after close )*****************
 
@@ -304,7 +297,7 @@ app.MapGet(
     .WithSummary("احضار جميع الأخبار")
     .WithTags("DBContext")
     .WithOpenApi()
-    .CacheOutput(c=>c.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
+    .CacheOutput(c => c.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
 
 app.MapGet(
         "/dbcontext/posts/{id}",
@@ -325,7 +318,12 @@ app.MapGet(
 
 app.MapPost(
         "/dbcontext/posts",
-        async (AppDbContext context, Post poss, IValidator<Post> validator, IOutputCacheStore outputCacheRestore) =>
+        async (
+            AppDbContext context,
+            Post poss,
+            IValidator<Post> validator,
+            IOutputCacheStore outputCacheRestore
+        ) =>
         {
             var validationResult = await validator.ValidateAsync(poss);
 
@@ -333,7 +331,7 @@ app.MapPost(
             {
                 await context.Posts.AddAsync(poss);
                 await context.SaveChangesAsync();
-                await outputCacheRestore.EvictByTagAsync("Post_Get",default);
+                await outputCacheRestore.EvictByTagAsync("Post_Get", default);
                 return Results.Created($"/posts/{poss.Id}", poss);
             }
             return Results.ValidationProblem(
@@ -349,10 +347,11 @@ app.MapPost(
 
 app.MapPost(
         "/dbcontext/posts/v2",
-        async (AppDbContext context, [FromBody] Post poss) =>
+        async (AppDbContext context, [FromBody] Post poss, IOutputCacheStore outputCacheRestore) =>
         {
             await context.Posts.AddAsync(poss);
             await context.SaveChangesAsync();
+            await outputCacheRestore.EvictByTagAsync("Post_Get", default);
             return Results.Created($"/posts/{poss.Id}", poss);
         }
     )
@@ -364,10 +363,15 @@ app.MapPost(
 
 app.MapPost(
         "/dbcontext/posts/v3",
-        async (AppDbContext context, [ModelBinder(typeof(PostModelBinder))] Post poss) =>
+        async (
+            AppDbContext context,
+            [ModelBinder(typeof(PostModelBinder))] Post poss,
+            IOutputCacheStore outputCacheRestore
+        ) =>
         {
             await context.Posts.AddAsync(poss);
             await context.SaveChangesAsync();
+            await outputCacheRestore.EvictByTagAsync("Post_Get", default);
             return Results.Created($"/posts/{poss.Id}", poss);
         }
     )
@@ -378,7 +382,7 @@ app.MapPost(
 
 app.MapPut(
         "/dbcontext/posts/{id}",
-        async (AppDbContext context, int id, Post poss) =>
+        async (AppDbContext context, int id, Post poss, IOutputCacheStore outputCacheRestore) =>
         {
             var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
             if (varPost != null)
@@ -387,6 +391,7 @@ app.MapPut(
                 varPost.Content = poss.Content;
                 varPost.postImage = poss.postImage;
                 await context.SaveChangesAsync();
+                await outputCacheRestore.EvictByTagAsync("Post_Get", default);
                 return Results.NoContent();
             }
             return Results.NotFound();
@@ -399,13 +404,14 @@ app.MapPut(
 
 app.MapDelete(
         "/dbcontext/posts/{id}",
-        async (AppDbContext context, int id) =>
+        async (AppDbContext context, int id, IOutputCacheStore outputCacheRestore) =>
         {
             var varPost = await context.Posts.FirstOrDefaultAsync(c => c.Id == id);
             if (varPost != null)
             {
                 context.Posts.Remove(varPost);
                 await context.SaveChangesAsync();
+                await outputCacheRestore.EvictByTagAsync("Post_Get", default);
                 return Results.NoContent();
             }
             return Results.NotFound();
@@ -415,7 +421,6 @@ app.MapDelete(
     .WithSummary("حذف خبر  ")
     .WithTags("DBContext")
     .WithOpenApi();
-
 
 app.MapGet(
         "/display",
