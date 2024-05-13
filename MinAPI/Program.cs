@@ -304,7 +304,7 @@ app.MapGet(
     .WithSummary("احضار جميع الأخبار")
     .WithTags("DBContext")
     .WithOpenApi()
-    .CacheOutput(c=>c.Expire(TimeSpan.FromDays(360).tag("Post_Get")));
+    .CacheOutput(c=>c.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
 
 app.MapGet(
         "/dbcontext/posts/{id}",
