@@ -57,6 +57,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 builder.Services.AddSingleton<IDateTime, SystemDateTime>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
+builder.Services.AddOutputCache();
 
  builder.Services.AddCors(options =>
         {
@@ -149,6 +150,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors("MyAllowedOrigins");
+
+app.UseOutputCache();
 
 //******************************************************* Ending Middle Points  *****************************************************
 
@@ -299,7 +302,8 @@ app.MapGet(
     .WithDescription("return All posts news ")
     .WithSummary("احضار جميع الأخبار")
     .WithTags("DBContext")
-    .WithOpenApi();
+    .WithOpenApi()
+    .CacheOutput(c=>c.Expire(TimeSpan.FromSeconds(15)));
 
 app.MapGet(
         "/dbcontext/posts/{id}",
