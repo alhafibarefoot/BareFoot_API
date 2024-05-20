@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 namespace MinAPI.EndPoints
@@ -7,8 +6,7 @@ namespace MinAPI.EndPoints
     {
         public static RouteGroupBuilder MapStaticPost(this RouteGroupBuilder group)
         {
-            //var builder = WebApplication.CreateBuilder();
-            //var varMyEnv = builder.Configuration.GetValue<string>("myEnv");
+
 
             //Creating Variables of Lists
             var varNewslist = new List<NewsListStatic>
@@ -134,18 +132,7 @@ namespace MinAPI.EndPoints
                 }
             );
 
-            //*************************Static Sample Hello*******************************************
 
-
-            // group.MapGet("/", () => varMyEnv).WithTags("Demo");
-            // group
-            //     .MapGet("/Demo", (Data.Models.IDateTime dateTime) => dateTime.Now)
-            //     .WithTags("Demo");
-            // group
-            //     .MapGet("/Demo2", ([FromServices] Data.Models.IDateTime dateTime) => dateTime.Now)
-            //     .WithTags("Demo");
-
-            //*****************Static Record End Points(Data Will not save after close )*****************
             return group;
         }
     }

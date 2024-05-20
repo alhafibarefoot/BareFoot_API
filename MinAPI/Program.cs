@@ -21,6 +21,7 @@ app.RegisterMiddlewares();
 
 
 app.MapGroup("/hello").MapHello().WithTags("Hello");
+app.MapGroup("/demo").MapDemo().WithTags("Demo");
 app.MapGroup("/staticpost").MapStaticPost().WithTags("StaticPostNews");
 app.MapGroup("/dbcontext").MapDBConextPost().WithTags("DBContextPostNews");
 app.MapGroup("/automapper").MapAutoMapperPost().WithTags("AutoMapperPostNews");
