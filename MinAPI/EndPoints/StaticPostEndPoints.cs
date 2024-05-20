@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 namespace MinAPI.EndPoints
@@ -37,7 +36,6 @@ namespace MinAPI.EndPoints
                     Summary = "إحضار جميع الأخبار",
                     Description =
                         "Returns information about all the available news from the Alhafi Blog."
-
                 });
 
             group
@@ -57,22 +55,20 @@ namespace MinAPI.EndPoints
                 .WithOpenApi();
 
             //Update specif Record
-            group
-                .MapPut(
-                    "/{id}",
-                    (NewsListStatic UpdateNewsListStatic, int id) =>
-                    {
-                        var varNews = varNewslist.Find(c => c.Id == id);
-                        if (varNews == null)
-                            return Results.NotFound("Sorry this command doesn't exsists");
+            group.MapPut(
+                "/{id}",
+                (NewsListStatic UpdateNewsListStatic, int id) =>
+                {
+                    var varNews = varNewslist.Find(c => c.Id == id);
+                    if (varNews == null)
+                        return Results.NotFound("Sorry this command doesn't exsists");
 
-                        varNews.Title = UpdateNewsListStatic.Title;
-                        varNews.Content = UpdateNewsListStatic.Content;
+                    varNews.Title = UpdateNewsListStatic.Title;
+                    varNews.Content = UpdateNewsListStatic.Content;
 
-                        return Results.Ok(varNews);
-                    }
-                );
-
+                    return Results.Ok(varNews);
+                }
+            );
 
             /// <summary>
             /// Creates a News.
@@ -93,52 +89,46 @@ namespace MinAPI.EndPoints
             /// <response code="201">Returns the newly created item</response>
             /// <response code="400">If the item is null</response>
 
-            group
-                .MapPost(
-                    "/",
-                    (NewsListStatic NewNewsListStatic) =>
+            group.MapPost(
+                "/",
+                (NewsListStatic NewNewsListStatic) =>
+                {
+                    if (NewNewsListStatic.Id != 0 || string.IsNullOrEmpty(NewNewsListStatic.Title))
                     {
-                        if (
-                            NewNewsListStatic.Id != 0
-                            || string.IsNullOrEmpty(NewNewsListStatic.Title)
-                        )
-                        {
-                            return Results.BadRequest("Invalid Id or HowTo filling");
-                        }
-                        if (
-                            varNewslist.FirstOrDefault(c =>
-                                c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
-                            ) != null
-                        )
-                        {
-                            return Results.BadRequest("HowTo Exsists");
-                        }
-
-                        NewNewsListStatic.Id =
-                            varNewslist.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
-                        varNewslist.Add(NewNewsListStatic);
-                        return Results.Ok(varNewslist);
+                        return Results.BadRequest("Invalid Id or HowTo filling");
                     }
-                );
+                    if (
+                        varNewslist.FirstOrDefault(c =>
+                            c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
+                        ) != null
+                    )
+                    {
+                        return Results.BadRequest("HowTo Exsists");
+                    }
 
+                    NewNewsListStatic.Id =
+                        varNewslist.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
+                    varNewslist.Add(NewNewsListStatic);
+                    return Results.Ok(varNewslist);
+                }
+            );
 
             /// <summary>
             ///Delete Specific News.
             /// </summary>
             /// <param name="id"></param>
             /// <returns></returns>
-            group
-                .MapDelete(
-                    "/{id}",
-                    (int id) =>
-                    {
-                        var varNews = varNewslist.Find(c => c.Id == id);
-                        if (varNews == null)
-                            return Results.NotFound("Sorry this News doesn't exsists");
-                        varNewslist.Remove(varNews);
-                        return Results.Ok(varNews);
-                    }
-                );
+            group.MapDelete(
+                "/{id}",
+                (int id) =>
+                {
+                    var varNews = varNewslist.Find(c => c.Id == id);
+                    if (varNews == null)
+                        return Results.NotFound("Sorry this News doesn't exsists");
+                    varNewslist.Remove(varNews);
+                    return Results.Ok(varNews);
+                }
+            );
 
             return group;
         }

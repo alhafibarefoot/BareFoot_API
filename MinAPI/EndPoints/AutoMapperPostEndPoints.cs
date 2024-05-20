@@ -1,6 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 using MinAPI.Validations;

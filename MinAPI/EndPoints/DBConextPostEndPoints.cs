@@ -15,7 +15,8 @@ namespace MinAPI.EndPoints
     {
         public static RouteGroupBuilder MapDBConextPost(this RouteGroupBuilder group)
         {
-            group.MapGet(
+            group
+                .MapGet(
                     "/posts",
                     async (AppDbContext context) =>
                     {
@@ -28,7 +29,8 @@ namespace MinAPI.EndPoints
                 .WithOpenApi()
                 .CacheOutput(c => c.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
 
-            group.MapGet(
+            group
+                .MapGet(
                     "/posts/{id}",
                     async (AppDbContext context, int id) =>
                     {
@@ -44,7 +46,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("احضار خبر واحد ")
                 .WithOpenApi();
 
-            group.MapPost(
+            group
+                .MapPost(
                     "/posts",
                     async (
                         AppDbContext context,
@@ -72,7 +75,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("ادخال خبر جديد ")
                 .WithOpenApi();
 
-            group.MapPost(
+            group
+                .MapPost(
                     "/posts/v2",
                     async (
                         AppDbContext context,
@@ -91,7 +95,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("ادخال خبر جديد ")
                 .WithOpenApi();
 
-            group.MapPost(
+            group
+                .MapPost(
                     "/posts/v3",
                     async (
                         AppDbContext context,
@@ -109,7 +114,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("ادخال خبر جديد ")
                 .WithOpenApi();
 
-            group.MapPut(
+            group
+                .MapPut(
                     "/posts/{id}",
                     async (
                         AppDbContext context,
@@ -135,7 +141,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("تعديل خبر  ")
                 .WithOpenApi();
 
-            group.MapDelete(
+            group
+                .MapDelete(
                     "/posts/{id}",
                     async (AppDbContext context, int id, IOutputCacheStore outputCacheRestore) =>
                     {
@@ -154,7 +161,8 @@ namespace MinAPI.EndPoints
                 .WithSummary("حذف خبر  ")
                 .WithOpenApi();
 
-            group.MapGet(
+            group
+                .MapGet(
                     "/display",
                     ([AsParameters] Post post) =>
                     {
