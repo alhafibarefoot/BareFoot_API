@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using FluentValidation;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -19,6 +20,10 @@ namespace MinAPI.Data.Models
 
         [DefaultValue("Post.jfif")]
         public string? postImage { get; set; }
+
+        [Column("CreatedOn", TypeName = "SmallDateTime")]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? CreatedOn { get; set; }
 
         // public class Validator : AbstractValidator<Post>
         // {
