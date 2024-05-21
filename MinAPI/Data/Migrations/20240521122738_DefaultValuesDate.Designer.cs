@@ -11,8 +11,8 @@ using MinAPI.Data;
 namespace MinAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240521114435_SeedingPostUpdated")]
-    partial class SeedingPostUpdated
+    [Migration("20240521122738_DefaultValuesDate")]
+    partial class DefaultValuesDate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,10 +30,8 @@ namespace MinAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedOn")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("SmallDateTime")
-                        .HasColumnName("CreatedOn")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnName("CreatedOn");
 
                     b.Property<string>("Title")
                         .IsRequired()

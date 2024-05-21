@@ -19,9 +19,13 @@ namespace MinAPI.Data.Migrations
                     { 2, "HTMX", "Hyper Media Content", "AlhafiLogo2.jpg" }
                 }
             );
+
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder) { }
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+
+        }
     }
 }

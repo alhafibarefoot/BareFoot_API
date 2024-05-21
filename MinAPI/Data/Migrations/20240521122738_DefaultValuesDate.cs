@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MinAPI.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DefaultValuesDateTime : Migration
+    public partial class DefaultValuesDate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,16 +15,7 @@ namespace MinAPI.Data.Migrations
                 name: "CreatedOn",
                 table: "Posts",
                 type: "SmallDateTime",
-                nullable: true
-                );
-
-
-                // migrationBuilder.AddColumn<DateTime>(
-                // name: "CreatedOn",
-                // table: "Posts",
-                // type: "SmallDateTime",
-                // nullable: true,
-                // defaultValueSql: "GETDATE()");
+                nullable: true);
         }
 
         /// <inheritdoc />

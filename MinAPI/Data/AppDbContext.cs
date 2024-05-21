@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MinAPI.Data.Models;
 
 namespace MinAPI.Data
@@ -28,10 +29,48 @@ namespace MinAPI.Data
                     if (defaultValue == null)
                         continue;
                     property.SetDefaultValue(defaultValue.Value);
+
+                    if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite") { }
                 }
 
-                //Fixed defaultValue for datetime in SQL for All Entioties as one
-                //entityType.FindProperty("CreatedOn")?.SetDefaultValueSql(("getdate()"));
+
+            }
+
+            if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+                {
+                    var properties = entityType
+                        .ClrType.GetProperties()
+                        .Where(p => p.PropertyType == typeof(decimal));
+                    var dateTimeProperties = entityType
+                        .ClrType.GetProperties()
+                        .Where(p => p.PropertyType == typeof(DateTimeOffset));
+
+                    foreach (var property in properties)
+                    {
+                        modelBuilder
+                            .Entity(entityType.Name)
+                            .Property(property.Name)
+                            .HasConversion<double>();
+                    }
+
+                    foreach (var property in dateTimeProperties)
+                    {
+                        modelBuilder
+                            .Entity(entityType.Name)
+                            .Property(property.Name)
+                            .HasConversion(new DateTimeOffsetToBinaryConverter());
+                    }
+                }
+            }
+            else
+            {
+                foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+                {
+                    //Fixed defaultValue for datetime in SQL for All Entioties as one
+                    entityType.FindProperty("CreatedOn")?.SetDefaultValueSql(("getdate()"));
+                }
             }
         }
     }
