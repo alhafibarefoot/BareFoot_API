@@ -3,7 +3,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using MinAPI.Data;
 using MinAPI.Data.Bindings;
 using MinAPI.Data.Models;

@@ -1,5 +1,7 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MinAPI.Data.Models
 {
@@ -12,8 +14,10 @@ namespace MinAPI.Data.Models
         [MaxLength(25)]
         public string? Title { get; set; }
 
+        [SwaggerParameter(Description = "Property description", Required = false)]
         public string? Content { get; set; }
 
+        [DefaultValue("poat.jfif")]
         public string? postImage { get; set; }
 
         // public class Validator : AbstractValidator<Post>

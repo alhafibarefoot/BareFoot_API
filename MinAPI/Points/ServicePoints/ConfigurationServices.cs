@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
+using MinAPI.Data.Repositories;
 
 namespace MinAPI.Points.ServicePoints
 {

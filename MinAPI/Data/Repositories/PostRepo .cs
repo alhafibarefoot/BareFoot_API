@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 
-namespace MinAPI.Data
+namespace MinAPI.Data.Repositories
 {
     public class PostRepo : IPostRepo
     {
