@@ -17,7 +17,7 @@ namespace MinAPI.Data.Models
         [SwaggerParameter(Description = "Property description", Required = false)]
         public string? Content { get; set; }
 
-        [DefaultValue("poat.jfif")]
+        [DefaultValue("Post.jfif")]
         public string? postImage { get; set; }
 
         // public class Validator : AbstractValidator<Post>
