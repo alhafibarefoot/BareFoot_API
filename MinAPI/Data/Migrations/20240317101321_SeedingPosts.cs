@@ -15,8 +15,8 @@ namespace MinAPI.Data.Migrations
                 columns: ["Id", "Title", "Content", "postImage"],
                 values: new object[,]
                 {
-                    { 1, "Post1", "Content Post1", null },
-                    { 2, "Post2", "Content Post2", null }
+                    { 1, "SPA", "Single Page Application","AlhafiLogo1.jpg" },
+                    { 2, "HTMX", "Hyper Media Content","AlhafiLogo2.jpg" }
                 }
             );
 
