@@ -27,8 +27,10 @@ namespace MinAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedOn")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("SmallDateTime")
-                        .HasColumnName("CreatedOn");
+                        .HasColumnName("CreatedOn")
+                        .HasDefaultValueSql("datetime('now', 'utc')");
 
                     b.Property<string>("Title")
                         .IsRequired()

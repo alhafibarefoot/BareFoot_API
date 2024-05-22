@@ -30,48 +30,23 @@ namespace MinAPI.Data
                         continue;
                     property.SetDefaultValue(defaultValue.Value);
 
-                    if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite") { }
-                }
-
-
-            }
-
-            if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
-            {
-                foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-                {
-                    var properties = entityType
-                        .ClrType.GetProperties()
-                        .Where(p => p.PropertyType == typeof(decimal));
-                    var dateTimeProperties = entityType
-                        .ClrType.GetProperties()
-                        .Where(p => p.PropertyType == typeof(DateTimeOffset));
-
-                    foreach (var property in properties)
+                    if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
                     {
-                        modelBuilder
-                            .Entity(entityType.Name)
-                            .Property(property.Name)
-                            .HasConversion<double>();
-                    }
 
-                    foreach (var property in dateTimeProperties)
-                    {
-                        modelBuilder
-                            .Entity(entityType.Name)
-                            .Property(property.Name)
-                            .HasConversion(new DateTimeOffsetToBinaryConverter());
+
+
                     }
                 }
+                entityType
+                    .FindProperty("CreatedOn")
+                    ?.SetDefaultValueSql(
+                        Database.IsSqlite() ? "datetime('now', 'utc')" : "getutcdate()"
+                    );
+
+
             }
-            else
-            {
-                foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-                {
-                    //Fixed defaultValue for datetime in SQL for All Entioties as one
-                    entityType.FindProperty("CreatedOn")?.SetDefaultValueSql(("getdate()"));
-                }
-            }
+
+
         }
     }
 }
