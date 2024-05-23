@@ -30,20 +30,16 @@ namespace MinAPI.Data
                         continue;
                     property.SetDefaultValue(defaultValue.Value);
 
-
+                    if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite") { }
                 }
 
-                 //Fixed defaultValue for datetime in MSSQL & SQLitefor All Entioties as one
+                //Fixed defaultValue for datetime in MSSQL & SQLitefor All Entioties as one
                 entityType
                     .FindProperty("CreatedOn")
                     ?.SetDefaultValueSql(
                         Database.IsSqlite() ? "datetime('now', 'utc')" : "getutcdate()"
                     );
-
-
             }
-
-
         }
     }
 }
