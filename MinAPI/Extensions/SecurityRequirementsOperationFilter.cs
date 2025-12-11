@@ -29,10 +29,7 @@ namespace MinAPI.Extensions
                                 {
                                     Type = ReferenceType.SecurityScheme,
                                     Id = "Bearer"
-                                },
-                                Scheme = "bearer",
-                                Name = "Bearer",
-                                In = ParameterLocation.Header,
+                                }
                             },
                             new List<string>()
                         }
