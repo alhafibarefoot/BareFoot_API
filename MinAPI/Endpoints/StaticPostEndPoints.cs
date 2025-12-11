@@ -70,7 +70,7 @@ namespace MinAPI.Endpoints
 
                     return Results.Ok(varNews);
                 }
-            );
+            ).RequireAuthorization();
 
             /// <summary>
             /// Creates a News.
@@ -113,7 +113,7 @@ namespace MinAPI.Endpoints
                     varNewslist.Add(NewNewsListStatic);
                     return Results.Ok(varNewslist);
                 }
-            );
+            ).RequireAuthorization();
 
             /// <summary>
             ///Delete Specific News.
@@ -130,7 +130,7 @@ namespace MinAPI.Endpoints
                     varNewslist.Remove(varNews);
                     return Results.Ok(varNews);
                 }
-            );
+            ).RequireAuthorization();
 
 
             return group;

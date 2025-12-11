@@ -126,6 +126,7 @@ namespace MinAPI.Endpoints
                 )
                 .WithDescription("Insert New Post News")
                 .WithSummary("ادخال خبر جديد ")
+                .RequireAuthorization()
                 .WithOpenApi();
 
             group
@@ -146,6 +147,7 @@ namespace MinAPI.Endpoints
                 .AddEndpointFilter<ValidationFilter<Post>>()
                 .WithDescription("Insert New Post News")
                 .WithSummary("ادخال خبر جديد ")
+                .RequireAuthorization()
                 .WithOpenApi();
 
             group
@@ -165,6 +167,7 @@ namespace MinAPI.Endpoints
                 )
                 .WithDescription("Insert New Post News")
                 .WithSummary("ادخال خبر جديد ")
+                .RequireAuthorization()
                 .WithOpenApi();
 
             group
@@ -192,6 +195,7 @@ namespace MinAPI.Endpoints
                 )
                 .WithDescription("Update Post News")
                 .WithSummary("تعديل خبر  ")
+                .RequireAuthorization()
                 .WithOpenApi();
 
             group
@@ -212,6 +216,7 @@ namespace MinAPI.Endpoints
                 )
                 .WithDescription("Delete  Post ")
                 .WithSummary("حذف خبر  ")
+                .RequireAuthorization()
                 .WithOpenApi();
 
             group
