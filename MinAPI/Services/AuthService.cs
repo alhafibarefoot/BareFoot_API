@@ -60,6 +60,27 @@ namespace MinAPI.Services
             };
         }
 
+        public Task<UserDto?> GetDevTokenAsync(string secret)
+        {
+            if (secret != "barefoot2020") return Task.FromResult<UserDto?>(null);
+
+            var devUser = new IdentityUser
+            {
+                Id = "dev-user-id",
+                Email = "dev@barefoot.com",
+                UserName = "devuser"
+            };
+
+            var userDto = new UserDto
+            {
+                Id = devUser.Id,
+                Email = devUser.Email,
+                Token = GenerateJwtToken(devUser)
+            };
+
+            return Task.FromResult<UserDto?>(userDto);
+        }
+
         private string GenerateJwtToken(IdentityUser user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");

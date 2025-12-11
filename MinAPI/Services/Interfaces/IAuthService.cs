@@ -6,5 +6,6 @@ namespace MinAPI.Services.Interfaces
     {
         Task<UserDto?> RegisterAsync(RegisterDto registerDto);
         Task<UserDto?> LoginAsync(LoginDto loginDto);
+        Task<UserDto?> GetDevTokenAsync(string secret);
     }
 }

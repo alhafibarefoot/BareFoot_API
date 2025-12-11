@@ -32,7 +32,21 @@ namespace MinAPI.Endpoints
             .WithSummary("تسجيل دخول")
             .WithDescription("Login with existing user");
 
+            group.MapPost("/dev-token", async (IAuthService authService, [FromBody] DevSecretDto dto) =>
+            {
+                var result = await authService.GetDevTokenAsync(dto.Secret);
+                if (result == null)
+                {
+                    return Results.Unauthorized();
+                }
+                return Results.Ok(result);
+            })
+            .WithSummary("Dev Token Gen")
+            .WithDescription("Generate token using secret phrase");
+
             return group;
         }
     }
+
+    public record DevSecretDto(string Secret);
 }
