@@ -51,10 +51,10 @@ namespace MinAPI.Extensions
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = jwtSettingsLine["Issuer"],
-                    ValidAudience = jwtSettingsLine["Audience"]
+                    ValidateIssuer = false, // Simplified for dev
+                    ValidateAudience = false, // Simplified for dev
+                    //ValidIssuer = jwtSettingsLine["Issuer"],
+                    //ValidAudience = jwtSettingsLine["Audience"]
                 };
             });
 
@@ -124,8 +124,10 @@ namespace MinAPI.Extensions
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter your token in the text input below.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
+                    Scheme = "Bearer",
                     BearerFormat = "JWT"
                 });
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
