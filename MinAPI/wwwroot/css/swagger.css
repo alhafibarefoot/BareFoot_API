@@ -1,14 +1,21 @@
-.topbar-wrapper img {
-  content: url("/AlhafiLogo.jpg");
-  background-color: white;
-  alt: var(AlhafiLogo);
+.swagger-ui .topbar-wrapper img {
+  content: url('/AlhafiLogo_Enhanced.png');
+  height: 50px; /* Adjust as needed */
+  width: auto;
+  display: block; /* Ensure it is displayed */
+  margin-right: 15px; /* Spacing between logo and text */
 }
 
-.topbar-wrapper .link:after {
+.swagger-ui .topbar-wrapper .link {
+  display: flex;
+  align-items: center;
+}
+
+.swagger-ui .topbar-wrapper .link:after {
   content: "BareFoot Swagger Documentation";
   color: #fff;
+  font-size: 20px;
+  font-weight: bold;
   visibility: visible;
   display: block;
-  position: absolute;
-  padding: 60px;
 }
