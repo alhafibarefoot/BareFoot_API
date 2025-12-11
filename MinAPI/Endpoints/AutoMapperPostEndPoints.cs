@@ -16,9 +16,12 @@ namespace MinAPI.Endpoints
             group
                 .MapGet(
                     "/automapper/posts",
-                    async (IPostService service) =>
+                    async (
+                        IPostService service,
+                        [AsParameters] MinAPI.Data.DTOs.PostQueryParameters parameters
+                    ) =>
                     {
-                        var posts = await service.GetAllPostsAsync();
+                        var posts = await service.GetAllPostsAsync(parameters);
                         return Results.Ok(posts);
                     }
                 )

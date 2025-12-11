@@ -17,10 +17,63 @@ namespace MinAPI.Endpoints
             group
                 .MapGet(
                     "/posts",
-                    async (AppDbContext context) =>
+                    async (
+                        AppDbContext context,
+                        string? search,
+                        string? sort,
+                        string? order,
+                        int page = 1,
+                        int pageSize = 50
+                    ) =>
                     {
-                        var varPosts = await context.Posts.ToListAsync();
-                        return Results.Ok(varPosts);
+                        var query = context.Posts.AsQueryable();
+
+                        // Filtering rules
+                        if (!string.IsNullOrEmpty(search))
+                        {
+                            query = query.Where(p =>
+                                (p.Title != null && p.Title.ToLower().Contains(search.ToLower()))
+                                || (p.Content != null && p.Content.ToLower().Contains(search.ToLower()))
+                            );
+                        }
+
+                        // Sorting rules
+                        if (!string.IsNullOrEmpty(sort))
+                        {
+                            switch (sort.ToLower())
+                            {
+                                case "id":
+                                    query =
+                                        order?.ToLower() == "desc"
+                                            ? query.OrderByDescending(p => p.Id)
+                                            : query.OrderBy(p => p.Id);
+                                    break;
+                                case "title":
+                                    query =
+                                        order?.ToLower() == "desc"
+                                            ? query.OrderByDescending(p => p.Title)
+                                            : query.OrderBy(p => p.Title);
+                                    break;
+                                case "content":
+                                    query =
+                                        order?.ToLower() == "desc"
+                                            ? query.OrderByDescending(p => p.Content)
+                                            : query.OrderBy(p => p.Content);
+                                    break;
+                                default:
+                                    query = query.OrderBy(p => p.Id); // Default sort
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            query = query.OrderBy(p => p.Id); // Default sort
+                        }
+
+                        // Pagination rules
+                        var posts = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                        return Results.Ok(posts);
                     }
                 )
                 .WithDescription("return All posts news ")

@@ -49,17 +49,17 @@ namespace MinAPI.Extensions
                     "MyAllowedOrigins",
                     policy =>
                     {
-                        policy
-                            .WithOrigins(
-                                "https://localhost/*",
-                                "http://localhost/*",
-                                "http://127.0.0.1/*",
-                                "https://www.alhafi.org"
-                            )
-                            .AllowAnyHeader()
-                            .AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
+                        var origins = builder
+                            .Configuration.GetSection("CorsSettings:AllowedOrigins")
+                            .Get<string[]>();
+
+                        if (origins != null && origins.Length > 0)
+                        {
+                            policy
+                                .WithOrigins(origins)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        }
                     }
                 );
             });

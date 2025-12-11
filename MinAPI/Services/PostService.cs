@@ -18,9 +18,9 @@ namespace MinAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PostReadDto>> GetAllPostsAsync()
+        public async Task<IEnumerable<PostReadDto>> GetAllPostsAsync(MinAPI.Data.DTOs.PostQueryParameters parameters)
         {
-            var posts = await _repo.GetAllPosts();
+            var posts = await _repo.GetAllPosts(parameters);
             return _mapper.Map<IEnumerable<PostReadDto>>(posts);
         }
 
