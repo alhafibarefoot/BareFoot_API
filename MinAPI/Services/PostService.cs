@@ -42,7 +42,7 @@ namespace MinAPI.Services
             if (postDto.Image != null)
             {
                 var fileExtension = Path.GetExtension(postDto.Image.FileName);
-                var fileName = $"POST({postModel.Id}_{postModel.Title}){fileExtension}";
+                var fileName = $"Post{postModel.Id}_{postModel.Title}{fileExtension}";
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "Posts");
 
                 if (!Directory.Exists(uploadsFolder))
@@ -74,7 +74,7 @@ namespace MinAPI.Services
             if (postDto.Image != null)
             {
                 var fileExtension = Path.GetExtension(postDto.Image.FileName);
-                var fileName = $"POST({post.Id}_{post.Title}){fileExtension}";
+                var fileName = $"Post{post.Id}_{post.Title}{fileExtension}";
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "Posts");
 
                 if (!Directory.Exists(uploadsFolder))
