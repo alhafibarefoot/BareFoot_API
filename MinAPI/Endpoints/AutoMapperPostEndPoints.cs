@@ -15,7 +15,7 @@ namespace MinAPI.Endpoints
             //Creating Variables of Lists
             group
                 .MapGet(
-                    "/automapper/posts",
+                    "/posts",
                     async (
                         IPostService service,
                         [AsParameters] MinAPI.Data.DTOs.PostQueryParameters parameters
@@ -31,7 +31,7 @@ namespace MinAPI.Endpoints
 
             group
                 .MapGet(
-                    "/automapper/posts/{id}",
+                    "/posts/{id}",
                     async (IPostService service, int id) =>
                     {
                         var post = await service.GetPostByIdAsync(id);
@@ -48,7 +48,7 @@ namespace MinAPI.Endpoints
 
             group
                 .MapPost(
-                    "/automapper/posts",
+                    "/posts",
                     async (
                         IPostService service,
                         [FromForm] PostNewOrUpdatedDto postCreateDto
@@ -66,7 +66,7 @@ namespace MinAPI.Endpoints
 
             group
                 .MapPut(
-                    "/automapper/posts/{id}",
+                    "/posts/{id}",
                     async (
                         IPostService service,
                         int id,
@@ -81,13 +81,14 @@ namespace MinAPI.Endpoints
                         return Results.NoContent();
                     }
                 )
+                .DisableAntiforgery()
                 .WithDescription("Update Post News")
                 .WithSummary("تعديل خبر  ")
                 .WithOpenApi();
 
             group
                 .MapDelete(
-                    "/automapper/posts/{id}",
+                    "/posts/{id}",
                     async (IPostService service, int id) =>
                     {
                         var result = await service.DeletePostAsync(id);

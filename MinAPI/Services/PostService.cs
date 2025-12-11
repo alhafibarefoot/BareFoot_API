@@ -69,7 +69,14 @@ namespace MinAPI.Services
             var post = await _repo.GetPostById(id);
             if (post == null) return false;
 
+            var oldImage = post.postImage;
             _mapper.Map(postDto, post);
+
+            // Preserve old image if no new one provided
+            if (string.IsNullOrEmpty(postDto.postImage) && postDto.Image == null)
+            {
+                post.postImage = oldImage;
+            }
 
             if (postDto.Image != null)
             {
