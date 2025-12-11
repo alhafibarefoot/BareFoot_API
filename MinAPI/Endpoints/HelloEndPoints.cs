@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace MinAPI.EndPoints
+namespace MinAPI.Endpoints
 {
     public static class HelloEndPoints
     {

@@ -1,9 +1,11 @@
-namespace MinAPI.Points.MiddlePoints
+namespace MinAPI.Extensions
 {
-    public static class ConfigurationMiddlePoint
+    public static class WebApplicationExtensions
     {
         public static void RegisterMiddlewares(this WebApplication app)
         {
+            app.UseExceptionHandler();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger(options =>

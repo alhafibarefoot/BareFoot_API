@@ -2,12 +2,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
+using MinAPI.Services.Interfaces;
 using MinAPI.Validations;
 using static MinAPI.Data.DTOs.PostDTOs;
 
-namespace MinAPI.EndPoints
+namespace MinAPI.Endpoints
 {
-    public static class AutoMapper
+    public static class AutoMapperPostEndpoints
     {
         public static RouteGroupBuilder MapAutoMapperPost(this RouteGroupBuilder group)
         {
@@ -15,10 +16,10 @@ namespace MinAPI.EndPoints
             group
                 .MapGet(
                     "/automapper/posts",
-                    async (IPostRepo repo, IMapper mapper) =>
+                    async (IPostService service) =>
                     {
-                        var varPosts = await repo.GetAllPosts();
-                        return Results.Ok(mapper.Map<IEnumerable<PostReadDto>>(varPosts));
+                        var posts = await service.GetAllPostsAsync();
+                        return Results.Ok(posts);
                     }
                 )
                 .WithDescription("return All posts news ")
@@ -28,12 +29,12 @@ namespace MinAPI.EndPoints
             group
                 .MapGet(
                     "/automapper/posts/{id}",
-                    async (IPostRepo repo, IMapper mapper, int id) =>
+                    async (IPostService service, int id) =>
                     {
-                        var varPost = await repo.GetPostById(id);
-                        if (varPost != null)
+                        var post = await service.GetPostByIdAsync(id);
+                        if (post != null)
                         {
-                            return Results.Ok(mapper.Map<PostReadDto>(varPost));
+                            return Results.Ok(post);
                         }
                         return Results.NotFound();
                     }
@@ -46,16 +47,12 @@ namespace MinAPI.EndPoints
                 .MapPost(
                     "/automapper/posts",
                     async (
-                        IPostRepo repo,
-                        IMapper mapper,
+                        IPostService service,
                         [FromBody] PostNewOrUpdatedDto postCreateDto
                     ) =>
                     {
-                        var postModel = mapper.Map<Post>(postCreateDto);
-                        await repo.CreatePost(postModel);
-                        await repo.SaveChanges();
-                        var postReadDto = mapper.Map<PostReadDto>(postModel);
-                        return Results.Created($"/automapper/posts/{postReadDto.Id}", postReadDto);
+                        var createdPost = await service.CreatePostAsync(postCreateDto);
+                        return Results.Created($"/automapper/posts/{createdPost.Id}", createdPost);
                     }
                 )
                 .AddEndpointFilter<ValidationFilter<PostNewOrUpdatedDto>>()
@@ -67,19 +64,16 @@ namespace MinAPI.EndPoints
                 .MapPut(
                     "/automapper/posts/{id}",
                     async (
-                        IPostRepo repo,
-                        IMapper mapper,
+                        IPostService service,
                         int id,
                         PostNewOrUpdatedDto postUpdateDto
                     ) =>
                     {
-                        var varPost = await repo.GetPostById(id);
-                        if (varPost == null)
+                        var result = await service.UpdatePostAsync(id, postUpdateDto);
+                        if (!result)
                         {
                             return Results.NotFound();
                         }
-                        mapper.Map(postUpdateDto, varPost);
-                        await repo.SaveChanges();
                         return Results.NoContent();
                     }
                 )
@@ -90,15 +84,13 @@ namespace MinAPI.EndPoints
             group
                 .MapDelete(
                     "/automapper/posts/{id}",
-                    async (IPostRepo repo, IMapper mapper, int id) =>
+                    async (IPostService service, int id) =>
                     {
-                        var varPost = await repo.GetPostById(id);
-                        if (varPost == null)
+                        var result = await service.DeletePostAsync(id);
+                        if (!result)
                         {
                             return Results.NotFound();
                         }
-                        repo.DeletePost(varPost);
-                        await repo.SaveChanges();
                         return Results.NoContent();
                     }
                 )

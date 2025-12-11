@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinAPI.Data.Models;
 
-namespace MinAPI.EndPoints
+namespace MinAPI.Endpoints
 {
     public static class DemoEndPoints
     {

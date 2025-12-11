@@ -8,7 +8,7 @@ using MinAPI.Data.Bindings;
 using MinAPI.Data.Models;
 using MinAPI.Validations;
 
-namespace MinAPI.EndPoints
+namespace MinAPI.Endpoints
 {
     public static class DBConext
     {

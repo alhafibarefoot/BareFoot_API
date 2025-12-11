@@ -5,10 +5,13 @@ using MinAPI.Data;
 using MinAPI.Data.Interfaces;
 using MinAPI.Data.Models;
 using MinAPI.Data.Repositories;
+using MinAPI.Services;
+using MinAPI.Services.Interfaces;
+using MinAPI.Middlewares;
 
-namespace MinAPI.Points.ServicePoints
+namespace MinAPI.Extensions
 {
-    public static class ConfigurationServices
+    public static class ServiceCollectionExtensions
     {
         public static void RegisterServices(this WebApplicationBuilder builder)
         {
@@ -20,6 +23,10 @@ namespace MinAPI.Points.ServicePoints
 
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IPostRepo, PostRepo>();
+            builder.Services.AddScoped<IPostService, PostService>();
+
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
 
             //builder.Services.AddValidatorsFromAssemblyContaining(typeof(PostValidator));
             //builder.Services.AddScoped<IValidator<Post>, PostValidator>();

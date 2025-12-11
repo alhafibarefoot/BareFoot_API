@@ -1,6 +1,5 @@
-using MinAPI.EndPoints;
-using MinAPI.Points.MiddlePoints;
-using MinAPI.Points.ServicePoints;
+using MinAPI.Endpoints;
+using MinAPI.Extensions;
 
 //****************************************************************************************************************************
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +24,7 @@ app.MapGroup("/demo").MapDemo().WithTags("Demo");
 app.MapGroup("/staticpost").MapStaticPost().WithTags("StaticPostNews");
 app.MapGroup("/dbcontext").MapDBConextPost().WithTags("DBContextPostNews");
 app.MapGroup("/automapper").MapAutoMapperPost().WithTags("AutoMapperPostNews");
+app.MapGroup("/api/test").MapTestEndpoints().WithTags("Testing");
 
 //****************************************************************************************************************************
 

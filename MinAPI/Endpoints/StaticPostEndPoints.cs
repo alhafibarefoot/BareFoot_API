@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
 
-namespace MinAPI.EndPoints
+namespace MinAPI.Endpoints
 {
     public static class StaticPost
     {
