@@ -11,11 +11,13 @@ namespace MinAPI.Services
     {
         private readonly IPostRepo _repo;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _environment;
 
-        public PostService(IPostRepo repo, IMapper mapper)
+        public PostService(IPostRepo repo, IMapper mapper, IWebHostEnvironment environment)
         {
             _repo = repo;
             _mapper = mapper;
+            _environment = environment;
         }
 
         public async Task<IEnumerable<PostReadDto>> GetAllPostsAsync(MinAPI.Data.DTOs.PostQueryParameters parameters)
@@ -35,7 +37,30 @@ namespace MinAPI.Services
         {
             var postModel = _mapper.Map<Post>(postDto);
             await _repo.CreatePost(postModel);
-            await _repo.SaveChanges();
+            await _repo.SaveChanges(); // Get ID
+
+            if (postDto.Image != null)
+            {
+                var fileExtension = Path.GetExtension(postDto.Image.FileName);
+                var fileName = $"POST({postModel.Id}_{postModel.Title}){fileExtension}";
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "Posts");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await postDto.Image.CopyToAsync(stream);
+                }
+
+                postModel.postImage = $"img/Posts/{fileName}";
+                await _repo.SaveChanges();
+            }
+
             return _mapper.Map<PostReadDto>(postModel);
         }
 
@@ -45,6 +70,28 @@ namespace MinAPI.Services
             if (post == null) return false;
 
             _mapper.Map(postDto, post);
+
+            if (postDto.Image != null)
+            {
+                var fileExtension = Path.GetExtension(postDto.Image.FileName);
+                var fileName = $"POST({post.Id}_{post.Title}){fileExtension}";
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "Posts");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await postDto.Image.CopyToAsync(stream);
+                }
+
+                post.postImage = $"img/Posts/{fileName}";
+            }
+
             await _repo.SaveChanges();
             return true;
         }

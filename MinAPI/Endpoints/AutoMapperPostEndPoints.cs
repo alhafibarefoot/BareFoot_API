@@ -51,13 +51,14 @@ namespace MinAPI.Endpoints
                     "/automapper/posts",
                     async (
                         IPostService service,
-                        [FromBody] PostNewOrUpdatedDto postCreateDto
+                        [FromForm] PostNewOrUpdatedDto postCreateDto
                     ) =>
                     {
                         var createdPost = await service.CreatePostAsync(postCreateDto);
                         return Results.Created($"/automapper/posts/{createdPost.Id}", createdPost);
                     }
                 )
+                .DisableAntiforgery()
                 .AddEndpointFilter<ValidationFilter<PostNewOrUpdatedDto>>()
                 .WithDescription("Insert New Post News")
                 .WithSummary("ادخال خبر جديد ")
@@ -69,7 +70,7 @@ namespace MinAPI.Endpoints
                     async (
                         IPostService service,
                         int id,
-                        PostNewOrUpdatedDto postUpdateDto
+                        [FromForm] PostNewOrUpdatedDto postUpdateDto
                     ) =>
                     {
                         var result = await service.UpdatePostAsync(id, postUpdateDto);

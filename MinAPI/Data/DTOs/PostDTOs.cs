@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace MinAPI.Data.DTOs
 {
@@ -27,6 +28,8 @@ namespace MinAPI.Data.DTOs
             public string? Content { get; set; }
 
             public string? postImage { get; set; }
+
+            public IFormFile? Image { get; set; }
         }
     }
 }
