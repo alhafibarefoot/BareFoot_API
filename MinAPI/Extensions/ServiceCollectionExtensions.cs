@@ -37,7 +37,11 @@ namespace MinAPI.Extensions
             builder.Services.AddValidatorsFromAssemblyContaining<Program>(
                 ServiceLifetime.Singleton
             );
-            builder.Services.AddOutputCache();
+            builder.Services.AddOutputCache(options =>
+            {
+                options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromSeconds(60)));
+                options.AddPolicy("PostCache", builder => builder.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
+            });
 
             builder.Services.AddCors(options =>
             {

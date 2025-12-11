@@ -26,7 +26,8 @@ namespace MinAPI.Endpoints
                 .WithDescription("return All posts news ")
                 .WithSummary("احضار جميع الأخبار")
                 .WithOpenApi()
-                .CacheOutput(c => c.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
+                .WithOpenApi()
+                .CacheOutput("PostCache");
 
             group
                 .MapGet(
