@@ -25,6 +25,7 @@ app.MapGroup("/staticpost").MapStaticPost().WithTags("StaticPostNews");
 app.MapGroup("/dbcontext").MapDBConextPost().WithTags("DBContextPostNews");
 app.MapGroup("/automapper").MapAutoMapperPost().WithTags("AutoMapperPostNews");
 app.MapGroup("/api/test").MapTestEndpoints().WithTags("Testing");
+app.MapGroup("/api/auth").MapAuthEndpoints().WithTags("Authentication");
 
 //****************************************************************************************************************************
 

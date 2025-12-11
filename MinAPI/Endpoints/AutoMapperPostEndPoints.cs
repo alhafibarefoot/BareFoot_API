@@ -59,6 +59,7 @@ namespace MinAPI.Endpoints
                     }
                 )
                 .DisableAntiforgery()
+                .RequireAuthorization()
                 .AddEndpointFilter<ValidationFilter<PostNewOrUpdatedDto>>()
                 .WithDescription("Insert New Post News")
                 .WithSummary("ادخال خبر جديد ")
@@ -82,6 +83,7 @@ namespace MinAPI.Endpoints
                     }
                 )
                 .DisableAntiforgery()
+                .RequireAuthorization()
                 .WithDescription("Update Post News")
                 .WithSummary("تعديل خبر  ")
                 .WithOpenApi();
@@ -99,6 +101,7 @@ namespace MinAPI.Endpoints
                         return Results.NoContent();
                     }
                 )
+                .RequireAuthorization()
                 .WithDescription("Delete  Post ")
                 .WithSummary("حذف خبر  ")
                 .WithOpenApi();

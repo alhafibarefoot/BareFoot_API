@@ -101,7 +101,7 @@ namespace MinAPI.Endpoints
                     }
                     if (
                         varNewslist.FirstOrDefault(c =>
-                            c.Title.ToLower() == NewNewsListStatic.Title.ToLower()
+                            c.Title?.ToLower() == NewNewsListStatic.Title?.ToLower()
                         ) != null
                     )
                     {
@@ -109,7 +109,7 @@ namespace MinAPI.Endpoints
                     }
 
                     NewNewsListStatic.Id =
-                        varNewslist.OrderByDescending(c => c.Id).FirstOrDefault().Id + 1;
+                        (varNewslist.OrderByDescending(c => c.Id).FirstOrDefault()?.Id ?? 0) + 1;
                     varNewslist.Add(NewNewsListStatic);
                     return Results.Ok(varNewslist);
                 }

@@ -19,10 +19,12 @@ A robust, "Clean Architecture" inspired .NET 8 Minimal API project. This API pro
     -   `page` & `pageSize`: Efficient data retrieval.
 -   **Output Caching**: High-performance caching using named policies (e.g., `PostCache` expires in 360 days).
 -   **Global Error Handling**: Centralized handling via `GlobalExceptionHandler` returning RFC 7807 problem details.
+-   **Security**: Integrated with **ASP.NET Core Identity** and **JWT Bearer Authentication**. Protected endpoints require valid tokens.
 -   **Test Endpoints**: A suite of simulation endpoints at `/api/test/` to verify system behavior under failure conditions.
 
 ## 🛠️ Technology Stack
 -   **.NET 8** Minimal API
+-   **ASP.NET Core Identity & JWT**
 -   **Entity Framework Core** (SQLite)
 -   **AutoMapper** for DTO mapping
 -   **FluentValidation**

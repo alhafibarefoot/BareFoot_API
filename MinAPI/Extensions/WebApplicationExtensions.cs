@@ -36,6 +36,9 @@ namespace MinAPI.Extensions
 
             app.UseCors("MyAllowedOrigins");
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseOutputCache();
         }
     }

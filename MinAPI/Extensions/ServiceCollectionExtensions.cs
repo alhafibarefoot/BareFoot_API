@@ -8,6 +8,10 @@ using MinAPI.Data.Repositories;
 using MinAPI.Services;
 using MinAPI.Services.Interfaces;
 using MinAPI.Middlewares;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MinAPI.Extensions
 {
@@ -24,6 +28,37 @@ namespace MinAPI.Extensions
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IPostRepo, PostRepo>();
             builder.Services.AddScoped<IPostService, PostService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            // Identity Configuration
+            builder.Services.AddIdentityCore<IdentityUser>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            // JWT Configuration
+            var jwtSettingsLine = builder.Configuration.GetSection("JwtSettings");
+            var key = Encoding.ASCII.GetBytes(jwtSettingsLine["Key"]!);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = jwtSettingsLine["Issuer"],
+                    ValidAudience = jwtSettingsLine["Audience"]
+                };
+            });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
@@ -85,6 +120,33 @@ namespace MinAPI.Extensions
                         TermsOfService = new("https://www.alhafi.org/")
                     }
                 );
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
 
                 // using System.Reflection;
                 var fileName = typeof(Program).Assembly.GetName().Name + ".xml";
