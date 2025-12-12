@@ -1,0 +1,599 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset='utf-8'><title>Barefoot API Course</title>
+<style>
+body { font-family: Calibri, Arial, sans-serif; line-height: 1.6; }
+h1 { color: #2E74B5; border-bottom: 2px solid #2E74B5; padding-bottom: 5px; margin-top: 30px; }
+h2 { color: #1F4D78; margin-top: 25px; border-bottom: 1px solid #eee; }
+h3 { color: #1F4D78; margin-top: 20px; }
+pre { background: #f4f4f4; padding: 10px; border: 1px solid #ddd; font-family: Consolas, monospace; overflow-x: auto; }
+code { background: #eee; padding: 2px 4px; font-family: Consolas, monospace; }
+table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background-color: #f2f2f2; }
+blockquote { border-left: 5px solid #ccc; margin: 15px 0; padding: 5px 15px; background: #fafafa; }
+</style>
+</head>
+<body>
+
+<h1>🦶 Barefoot API: Mastering Minimal APIs in .NET 8</h1>
+<p>Welcome to the <b>Barefoot API</b> course! This guide will take you step-by-step from zero to a professional, production-ready Minimal API using clean architecture principles.</p>
+
+<h2>📚 Course Modules</h2>
+<table>
+<thead>
+<tr><th>Module</th><th>Title</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><b>Module 1</b></td><td><b>Project Setup & Basics</b></td><td>Environment setup, project creation, directory structure, and your first "Hello World".</td></tr>
+<tr><td><b>Module 2</b></td><td><b>Static Data & Basic Endpoints</b></td><td>Working with in-memory data, parameter binding, and customizing Swagger documentation.</td></tr>
+<tr><td><b>Module 3</b></td><td><b>Database Integration</b></td><td>Connecting to SQLite/SQL Server, defining Models, Context, and running Migrations.</td></tr>
+<tr><td><b>Module 4</b></td><td><b>Services, DTOs & Mapping</b></td><td>Decoupling logic with Services, using DTOs to hide internal models, and AutoMapper.</td></tr>
+<tr><td><b>Module 5</b></td><td><b>Data Mastery</b></td><td>Handling large datasets efficiently with filtering, sorting, and pagination.</td></tr>
+<tr><td><b>Module 6</b></td><td><b>Robustness</b></td><td>Validating inputs with FluentValidation, global error handling, and file uploads.</td></tr>
+<tr><td><b>Module 7</b></td><td><b>Security</b></td><td>Securing your API with JWT Bearer tokens and configuring CORS.</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h2>🛠️ Tech Stack</h2>
+<ul>
+<li><b>.NET 8</b></li>
+<li><b>Entity Framework Core</b></li>
+<li><b>Sqlite / SQL Server</b></li>
+<li><b>AutoMapper</b></li>
+<li><b>FluentValidation</b></li>
+<li><b>Swagger / OpenAPI</b></li>
+</ul>
+
+<blockquote>
+<p><b>NOTE:</b> This course is based on the <b>Barefoot API</b> project architecture.</p>
+</blockquote>
+
+<h1>Module 1: Fundamentals & Setup</h1>
+<p>In this module, we will establish the foundation of our Minimal API project. We'll start from scratch, understand the project structure, and get our first endpoint running.</p>
+
+<h2>1. Create the Project</h2>
+<p>We will use the .NET CLI to create a new Minimal API project.</p>
+<pre><code># Create a new Web API project
+dotnet new webapi -minimal -n MinAPI
+
+# Navigate into the project directory
+cd MinAPI
+</code></pre>
+
+<blockquote>
+<p><b>TIP:</b> The <code>-minimal</code> flag ensures we get the lightweight Minimal API template without Controllers.</p>
+</blockquote>
+
+<h2>2. The .gitignore File</h2>
+<p>Git is essential. A proper <code>.gitignore</code> prevents clutter (like <code>bin/</code>, <code>obj/</code>, <code>user secrets</code>) from hitting your repository.</p>
+<p><b>Create a .gitignore</b> at the root of your solution with standard .NET content:</p>
+<pre><code>## Ignore Visual Studio temporary files, build results, and user-specific files.
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+appsettings.local.json
+</code></pre>
+
+<h2>3. Project Structure</h2>
+<p>Your new project looks like this. Let's create the folder structure we will need effectively implementing <b>Clean Architecture</b> later.</p>
+<pre><code>MinAPI/
+├── Program.cs          # Entry point & Configuration
+├── MinAPI.csproj       # Project file & Dependencies
+├── appsettings.json    # Configuration (Connections, Logging)
+│
+├── Data/               # Database Context & Repositories
+├── Data/Models/        # Entity Models
+├── Endpoints/          # API Route Groups (Endpoints)
+├── Extensions/         # Extension methods for clean Program.cs
+├── Services/           # Business Logic
+├── DTOs/               # Data Transfer Objects
+└── Validations/        # Input Validation Rules
+</code></pre>
+
+<blockquote>
+<p><b>IMPORTANT:</b> Creating these folders now helps us stay organized as the project grows.</p>
+</blockquote>
+
+<h2>4. Understanding Program.cs</h2>
+<p>In Minimal APIs, <code>Program.cs</code> is where everything happens. It has three main zones:</p>
+<ol>
+<li><b>Builder & Services Zone</b>: Registration of DI (Dependency Injection) containers.</li>
+<li><b>Build</b>: The app is built.</li>
+<li><b>Middleware & Pipelines</b>: Request handling pipeline (Services, Swaggers, Https).</li>
+</ol>
+
+<pre><code>var builder = WebApplication.CreateBuilder(args);
+
+// 1. SERVICES ZONE
+// Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// 2. MIDDLEWARE ZONE
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+// 3. ENDPOINTS ZONE
+app.MapGet("/weatherforecast", () => { ... })
+.WithName("GetWeatherForecast")
+.WithOpenApi();
+
+app.Run();
+</code></pre>
+
+<h2>Next Step</h2>
+<p>Now that we have the project created, let's start adding <b>Static Data</b> and building real endpoints.</p>
+
+<h1>Module 2: Static Data & Basic Endpoints</h1>
+<p>In this module, we will build our first functional endpoints without a database. This helps us focus on API structure, routing, and parameter binding.</p>
+
+<h2>1. Using Static Data (In-Memory)</h2>
+<p>Before connecting to a real database, let's simulate data using a static list. This is useful for prototyping.</p>
+<p><b>Scenario</b>: We want to manage a list of <code>Post</code> items. First, define a simple <code>Post</code> class (Model) inline or in a <code>Models</code> folder.</p>
+<pre><code>public class Post
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Content { get; set; }
+}
+</code></pre>
+<p>Now, let's create a static list in our endpoint definitions.</p>
+
+<h2>2. Defining Endpoints</h2>
+<p>We will create a specific endpoint group for our static posts. This keeps <code>Program.cs</code> clean.</p>
+<p><b>File</b>: <code>Endpoints/StaticPostEndPoints.cs</code></p>
+<pre><code>public static class StaticPostEndPoints
+{
+    // Simulate a database with a static list
+    internal static List&lt;Post&gt; posts = new()
+    {
+        new Post { Id = 1, Title = "First Post", Content = "Hello World" },
+        new Post { Id = 2, Title = "Second Post", Content = "Minimal APIs are cool" }
+    };
+
+    public static RouteGroupBuilder MapStaticPost(this RouteGroupBuilder group)
+    {
+        // GET /staticpost
+        group.MapGet("/", () => posts);
+
+        // GET /staticpost/{id}
+        group.MapGet("/{id}", (int id) =>
+        {
+            var post = posts.FirstOrDefault(p => p.Id == id);
+            return post is not null ? Results.Ok(post) : Results.NotFound();
+        })
+        .WithName("GetStaticPostById");
+
+        // POST /staticpost
+        group.MapPost("/", (Post post) =>
+        {
+            post.Id = posts.Max(p => p.Id) + 1;
+            posts.Add(post);
+            return Results.Created($"/staticpost/{post.Id}", post);
+        });
+
+        // PUT /staticpost/{id}
+        group.MapPut("/{id}", (int id, Post updatedPost) =>
+        {
+            var post = posts.FirstOrDefault(p => p.Id == id);
+            if (post is null) return Results.NotFound();
+
+            post.Title = updatedPost.Title;
+            post.Content = updatedPost.Content;
+            return Results.Ok(post);
+        });
+
+        // DELETE /staticpost/{id}
+        group.MapDelete("/{id}", (int id) =>
+        {
+            var post = posts.FirstOrDefault(p => p.Id == id);
+            if (post is null) return Results.NotFound();
+
+            posts.Remove(post);
+            return Results.NoContent();
+        });
+
+        return group;
+    }
+}
+</code></pre>
+
+<h2>3. Registering the Group in Program.cs</h2>
+<p>To make these endpoints active, we must call the mapping method in <code>Program.cs</code>.</p>
+<pre><code>// Program.cs
+app.MapGroup("/staticpost")
+   .MapStaticPost()
+   .WithTags("StaticPostNews");
+</code></pre>
+
+<h2>4. Parameter Binding</h2>
+<p>Minimal APIs automatically bind parameters.</p>
+<ul>
+<li><b>Route Values</b>: <code>/{id}</code> -> <code>(int id)</code></li>
+<li><b>Body</b>: <code>(Post post)</code> (JSON body is deserialized)</li>
+<li><b>Query Strings</b>: <code>?term=abc</code> -> <code>(string term)</code></li>
+</ul>
+<blockquote>
+<p><b>NOTE:</b> We rely on the framework's conventions. Explicit attributes like <code>[FromRoute]</code> are rarely needed in .NET 8 Minimal APIs.</p>
+</blockquote>
+
+<h2>5. Swagger Customization</h2>
+<p>To make our API documentation professional, we can add a title, description, and contact info in <code>Program.cs</code> (or via extensions).</p>
+<pre><code>builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Barefoot API",
+        Description = "Built with .NET 8 Minimal API",
+        Contact = new OpenApiContact
+        {
+            Name = "Alhafi BareFoot",
+            Email = "alhafi@hotmail.com"
+        }
+    });
+});
+</code></pre>
+<p>Result: A professional Swagger UI page greeting your users.</p>
+
+<h1>Module 3: Database & Architecture</h1>
+<p>In this module, we transition from static lists to a real database using Entity Framework Core. We will also introduce the folder structure that defines <b>Clean Architecture</b>.</p>
+
+<h2>1. Clean Architecture Folders</h2>
+<p>We will organize our code into specific responsibilities:</p>
+<ul>
+<li><code>Data/Models</code>: The shape of our data (Entities).</li>
+<li><code>Data/</code>: The database context.</li>
+<li><code>Data/Migrations</code>: Database versioning history.</li>
+<li><code>Endpoints</code>: The API routes.</li>
+</ul>
+
+<h2>2. Defining the Model (Entity)</h2>
+<p>Let's create a robust <code>Post</code> model.</p>
+<p><b>File</b>: <code>Data/Models/Post.cs</code></p>
+<pre><code>using System.ComponentModel.DataAnnotations;
+
+namespace MinAPI.Data.Models;
+
+public class Post
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string Title { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(100)]
+    public string Content { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? LastUpdated { get; set; }
+
+    public string? ImagePath { get; set; }
+}
+</code></pre>
+
+<h2>3. The Database Context</h2>
+<p>The <code>DbContext</code> is the bridge between our code and the database.</p>
+<p><b>File</b>: <code>Data/AppDbContext.cs</code></p>
+<pre><code>using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using MinAPI.Data.Models;
+
+namespace MinAPI.Data;
+
+public class AppDbContext : IdentityDbContext
+{
+    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options) : base(options)
+    {
+    }
+
+    public DbSet&lt;Post&gt; Posts { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Seed default data
+        modelBuilder.Entity&lt;Post&gt;().HasData(
+            new Post { Id = 1, Title = "Seed Post", Content = "Initial data from migration" }
+        );
+    }
+}
+</code></pre>
+
+<h2>4. Configuration & Dependency Injection</h2>
+<p>We need to tell the app to use Sqlite (or SQL Server) and where to find the connection string.</p>
+<p><b>File</b>: <code>appsettings.json</code></p>
+<pre><code>{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=AlhafiNewsPaper.db"
+  }
+}
+</code></pre>
+<p><b>File</b>: <code>Extensions/ServiceCollectionExtensions.cs</code></p>
+<pre><code>builder.Services.AddDbContext&lt;AppDbContext&gt;(x =>
+    x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+</code></pre>
+
+<h2>5. Migrations</h2>
+<p>Now we create the database schema from our code.</p>
+<pre><code># Create the initial migration
+dotnet ef migrations add InitialCreate -o Data/Migrations
+
+# Apply the migration to the database
+dotnet ef database update
+</code></pre>
+
+<h2>6. Using the Database in Endpoints</h2>
+<p>Instead of the static list, we now inject <code>AppDbContext</code> into our endpoints.</p>
+<pre><code>group.MapGet("/", async (AppDbContext db) =>
+    await db.Posts.ToListAsync());
+</code></pre>
+
+<h1>Module 4: Professional Patterns</h1>
+<p>Professional applications don't leak database models to the outside world. In this module, we introduce <b>DTOs (Data Transfer Objects)</b>, <b>Services</b>, and <b>AutoMapper</b>.</p>
+
+<h2>1. Why DTOs?</h2>
+<p>Exposing your database entity directly (<code>Post</code>) is risky. DTOs allow us to:</p>
+<ul>
+<li>Hide internal fields (like <code>LastUpdated</code> or sensitive data).</li>
+<li>Shape data specifically for the client.</li>
+<li>Decouple the API contract from the database schema.</li>
+</ul>
+<p><b>File</b>: <code>Data/DTOs/PostDTOs.cs</code></p>
+<pre><code>public record PostDto(int Id, string Title, string Content, DateTime CreatedAt);
+
+public record PostNewOrUpdatedDto(string Title, string Content);
+</code></pre>
+
+<h2>2. AutoMapper Setup</h2>
+<p>Manually copying properties from Entity to DTO is tedious. <code>AutoMapper</code> automates this.</p>
+<p><b>File</b>: <code>Data/Profiles/PostProfile.cs</code></p>
+<pre><code>using AutoMapper;
+using MinAPI.Data.DTOs;
+using MinAPI.Data.Models;
+
+namespace MinAPI.Data.Profiles;
+
+public class PostProfile : Profile
+{
+    public PostProfile()
+    {
+        // Source -> Destination
+        CreateMap&lt;Post, PostDto&gt;();
+        CreateMap&lt;PostNewOrUpdatedDto, Post&gt;();
+    }
+}
+</code></pre>
+<p><b>Register AutoMapper</b> in <code>Extensions/ServiceCollectionExtensions.cs</code>:</p>
+<pre><code>builder.Services.AddAutoMapper(typeof(Program));
+</code></pre>
+
+<h2>3. The Service Layer</h2>
+<p>The Service layer holds our <b>Business Logic</b>.</p>
+<p><b>File</b>: <code>Services/Interfaces/IPostService.cs</code></p>
+<pre><code>public interface IPostService
+{
+    Task&lt;IEnumerable&lt;PostDto&gt;&gt; GetAllPosts();
+    Task&lt;PostDto?&gt; GetPostById(int id);
+    Task&lt;PostDto&gt; CreatePost(PostNewOrUpdatedDto newPost);
+}
+</code></pre>
+<p><b>File</b>: <code>Services/PostService.cs</code></p>
+<pre><code>public class PostService : IPostService
+{
+    private readonly AppDbContext _db;
+    private readonly IMapper _mapper;
+
+    public PostService(AppDbContext db, IMapper mapper)
+    {
+        _db = db;
+        _mapper = mapper;
+    }
+
+    public async Task&lt;IEnumerable&lt;PostDto&gt;&gt; GetAllPosts()
+    {
+        var posts = await _db.Posts.ToListAsync();
+        return _mapper.Map&lt;IEnumerable&lt;PostDto&gt;&gt;(posts);
+    }
+
+    // ... Implement other methods
+}
+</code></pre>
+
+<h2>4. Updating Endpoints</h2>
+<p>Now our endpoints are clean and only talk to the Service.</p>
+<pre><code>// Program.cs or Endpoints/AutoMapperPostEndPoints.cs
+group.MapGet("/", async (IPostService service) =>
+{
+    var posts = await service.GetAllPosts();
+    return Results.Ok(posts);
+});
+</code></pre>
+
+<h1>Module 5: Data Operations (Search, Sort, Pagination)</h1>
+<p>As our data grows, we can't just return <code>GetAll()</code>. We need sophisticated querying capabilities.</p>
+
+<h2>1. Query Parameters Object</h2>
+<p>Instead of adding 10 parameters to our endpoint method, we create a dedicated object to bind query strings.</p>
+<p><b>File</b>: <code>Data/DTOs/PostQueryParameters.cs</code></p>
+<pre><code>public class PostQueryParameters
+{
+    public string? Sort { get; set; }
+    public string? Search { get; set; }
+    public string? Order { get; set; } = "asc";
+    public int? Page { get; set; } = 1;
+    public int? PageSize { get; set; } = 10;
+}
+</code></pre>
+
+<h2>2. Parameter Binding in Endpoint</h2>
+<p>Minimal APIs are smart enough to map query string values to this object automatically.</p>
+<pre><code>// GET /api/posts?search=api&sort=title&page=2
+group.MapGet("/", async (IPostService service, [AsParameters] PostQueryParameters parameters) =>
+{
+    var posts = await service.GetAllPostsAsync(parameters);
+    return Results.Ok(posts);
+});
+</code></pre>
+<blockquote><p><b>TIP:</b> <code>[AsParameters]</code> is the key here.</p></blockquote>
+
+<h2>3. Implementation in Repository</h2>
+<p>Now we need to apply this logic in our database query (Linq to Entities).</p>
+<p><b>File</b>: <code>Data/Repositories/PostRepo.cs</code></p>
+<pre><code>public async Task&lt;IEnumerable&lt;Post&gt;&gt; GetAllPosts(PostQueryParameters parameters)
+{
+    var query = _context.Posts.AsQueryable();
+
+    // 1. Filtering (Search)
+    if (!string.IsNullOrEmpty(parameters.Search))
+    {
+        var search = parameters.Search.ToLower();
+        query = query.Where(p =>
+            p.Title.ToLower().Contains(search) ||
+            p.Content.ToLower().Contains(search));
+    }
+
+    // 2. Sorting
+    query = parameters.Sort?.ToLower() switch
+    {
+        "title" => parameters.Order == "desc"
+            ? query.OrderByDescending(p => p.Title)
+            : query.OrderBy(p => p.Title),
+        "content" => parameters.Order == "desc"
+            ? query.OrderByDescending(p => p.Content)
+            : query.OrderBy(p => p.Content),
+        _ => query.OrderBy(p => p.Id) // Default sort
+    };
+
+    // 3. Pagination
+    var page = parameters.Page ?? 1;
+    var pageSize = parameters.PageSize ?? 10;
+
+    return await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+}
+</code></pre>
+
+<h1>Module 6: Robustness & Files</h1>
+<p>A professional API needs to handle errors gracefully, validate inputs before processing, and manage file uploads.</p>
+
+<h2>1. Global Error Handling</h2>
+<p>Instead of wrapping every controller action in a <code>try-catch</code> block, we use a global exception handler.</p>
+<p><b>File</b>: <code>Middlewares/GlobalExceptionHandler.cs</code></p>
+<pre><code>public class GlobalExceptionHandler : IExceptionHandler
+{
+    private readonly ILogger&lt;GlobalExceptionHandler&gt; _logger;
+
+    public async ValueTask&lt;bool&gt; TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    {
+        _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
+
+        var problemDetails = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Server Error",
+            Detail = "An internal server error has occurred."
+        };
+
+        if (exception is ArgumentNullException)
+        {
+            problemDetails.Status = StatusCodes.Status400BadRequest;
+            problemDetails.Detail = "Invalid Argument";
+        }
+
+        httpContext.Response.StatusCode = problemDetails.Status.Value;
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+        return true;
+    }
+}
+</code></pre>
+
+<h2>2. Validation with FluentValidation</h2>
+<p>We use <b>FluentValidation</b> to separate validation rules from the model.</p>
+<p><b>File</b>: <code>Validations/PostValidator.cs</code></p>
+<pre><code>public class PostNewOrUpdatedDtoValidator : AbstractValidator&lt;PostNewOrUpdatedDto&gt;
+{
+    public PostNewOrUpdatedDtoValidator()
+    {
+        RuleFor(p => p.Title)
+            .NotEmpty().WithMessage("Title is required")
+            .MaximumLength(25).WithMessage("Title max length is 25");
+    }
+}
+</code></pre>
+
+<h2>3. Handling File Uploads</h2>
+<p>To upload files (images), we use <code>IFormFile</code> in our DTO.</p>
+<pre><code>public class PostNewOrUpdatedDto
+{
+    // ... other properties
+    public IFormFile? Image { get; set; }
+}
+</code></pre>
+
+<h1>Module 7: Security (Auth & CORS)</h1>
+<p>Security is paramount. We will implement <b>JWT (JSON Web Token)</b> authentication and configure <b>CORS</b> for frontend access.</p>
+
+<h2>1. Authentication Service</h2>
+<p><b>File</b>: <code>Services/AuthService.cs</code></p>
+<pre><code>public async Task&lt;UserDto?&gt; LoginAsync(LoginDto loginDto)
+{
+    var user = await _userManager.FindByEmailAsync(loginDto.Email);
+    // ... Verify password ...
+
+    return new UserDto
+    {
+        Id = user.Id,
+        Email = user.Email!,
+        Token = GenerateJwtToken(user) // Issue the token
+    };
+}
+</code></pre>
+
+<h2>2. JWT Configuration (Program.cs)</h2>
+<p>We need to validate the tokens sent by users.</p>
+<pre><code>builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+builder.Services.AddAuthorization();
+</code></pre>
+
+<h2>3. Securing Endpoints</h2>
+<pre><code>group.MapPost("/", ...)
+     .RequireAuthorization(); // 🔒 Locked!
+</code></pre>
+
+<hr>
+<h1>🎉 Conclusion</h1>
+<p>Congratulations! You have built a production-grade Minimal API with Clean Architecture, Database, Validation, and Security.</p>
+
+</body></html>
