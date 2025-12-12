@@ -99,7 +99,7 @@ namespace MinAPI.EndPoints
                     "/posts/v3",
                     async (
                         AppDbContext context,
-                        [ModelBinder(typeof(PostModelBinder))] Post poss,
+                        Post poss,
                         IOutputCacheStore outputCacheRestore
                     ) =>
                     {

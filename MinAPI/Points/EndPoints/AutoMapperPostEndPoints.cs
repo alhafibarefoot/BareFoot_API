@@ -15,9 +15,9 @@ namespace MinAPI.EndPoints
             group
                 .MapGet(
                     "/automapper/posts",
-                    async (IPostRepo repo, IMapper mapper) =>
+                    async (IPostRepo repo, IMapper mapper, [AsParameters] MinAPI.Data.DTOs.PostQueryParameters parameters) =>
                     {
-                        var varPosts = await repo.GetAllPosts();
+                        var varPosts = await repo.GetAllPosts(parameters);
                         return Results.Ok(mapper.Map<IEnumerable<PostReadDto>>(varPosts));
                     }
                 )
