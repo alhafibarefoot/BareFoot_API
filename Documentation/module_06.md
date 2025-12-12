@@ -103,3 +103,13 @@ if (postDto.Image != null)
 ```
 
 This creates a complete flow handling data, validation, and binary files.
+
+## 4. Testing Robustness
+Your API includes specific endpoints to simulate failures and verify your global error handler is working.
+
+**Test Endpoints** (`/api/test/`):
+*   `GET /not-found/{id}`: value **1** returns 404.
+*   `GET /database-error`: Throws a `DatabaseException`.
+*   `GET /unauthorized`: Returns 401.
+
+Use these in Swagger to demonstrate to students how the API reacts to problems.

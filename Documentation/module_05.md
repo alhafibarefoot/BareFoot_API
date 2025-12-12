@@ -74,3 +74,23 @@ public async Task<IEnumerable<Post>> GetAllPosts(PostQueryParameters parameters)
 ```
 
 This efficient query runs on the database server, returning only the requested page of data.
+
+## 4. Output Caching
+To improve performance, we can cache the results of expensive operations.
+
+**Configuration**:
+In `Program.cs` or `Extensions/ServiceCollectionExtensions.cs`, we define policies:
+```csharp
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromSeconds(60)));
+    options.AddPolicy("PostCache", builder => builder.Expire(TimeSpan.FromDays(360)).Tag("Post_Get"));
+});
+```
+
+**Usage**:
+```csharp
+app.MapGroup("/dbcontext")
+   .MapDBConextPost()
+   .CacheOutput("PostCache"); // Applies caching middleware
+```

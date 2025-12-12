@@ -93,3 +93,14 @@ group.MapGet("/", async (IPostService service) =>
 ```
 
 This pattern creates a separation of concerns that is essential for larger applications.
+
+## 5. Advanced Dependency Injection
+While Minimal APIs support implicit DI (just adding the type to the parameters), you can be explicit using `[FromServices]`.
+
+**Example**: `Endpoints/DemoEndpoints.cs`
+```csharp
+group.MapGet("/FromRegisteredService", ([FromServices] IDateTime dateTime) =>
+    dateTime.Now);
+```
+
+This is useful when you want to be clear about where a parameter is coming from, or when disambiguating between route parameters and services.

@@ -16,6 +16,8 @@ cd MinAPI
 > [!TIP]
 > The `-minimal` flag ensures we get the lightweight Minimal API template without Controllers.
 
+**Note on JSON**: This project includes `Microsoft.AspNetCore.Mvc.NewtonsoftJson`. While .NET 8 uses `System.Text.Json` by default, Newtonsoft is often added for specific serialization behaviors or legacy compatibility.
+
 ## 2. The `.gitignore` File
 Git is essential. A proper `.gitignore` prevents clutter (like `bin/`, `obj/`, `user secrets`) from hitting your repository.
 

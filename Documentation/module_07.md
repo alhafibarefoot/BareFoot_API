@@ -45,6 +45,27 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 ```
 
+### Pro Tip: The "Magic" Developer Token
+For development purposes, we have implemented a backdoor to easily generate tokens without a full login flow.
+
+**How it works**:
+If you send a request with the header `Authorization: Bearer barefoot2020`, the API intercepts this in the `OnMessageReceived` event and generates a valid "Dev Token" on the fly.
+
+**Code Reference**: `Extensions/ServiceCollectionExtensions.cs`
+```csharp
+OnMessageReceived = context =>
+{
+    var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+    if (token == "barefoot2020")
+    {
+        context.Token = GenerateDevToken(builder.Configuration);
+    }
+    return Task.CompletedTask;
+}
+```
+> [!WARNING]
+> Ensure this logic is removed or disabled in Production environments!
+
 ## 3. Securing Endpoints
 Now we can protect any endpoint using `RequireAuthorization()`.
 
