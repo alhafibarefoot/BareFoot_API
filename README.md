@@ -1,4 +1,4 @@
-# 🦶 Barefoot API: Mastering Minimal APIs in .NET 9
+# 🦶 Barefoot API: Mastering  APIs in .NET 9
 
 ## 🌍 نظرة عامة على المشروع (Project Overview)
 
