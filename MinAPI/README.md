@@ -1,6 +1,6 @@
 # BareFoot API (MinAPI)
 
-A robust, "Clean Architecture" inspired .NET 8 Minimal API project. This API provides news post management with advanced features like output caching, global error handling, and a dedicated service layer.
+A robust, "Clean Architecture" inspired .NET 9 Minimal API project. This API provides news post management with advanced features like output caching, global error handling, and a dedicated service layer.
 
 ## 🚀 Key Features
 
@@ -23,7 +23,7 @@ A robust, "Clean Architecture" inspired .NET 8 Minimal API project. This API pro
 -   **Test Endpoints**: A suite of simulation endpoints at `/api/test/` to verify system behavior under failure conditions.
 
 ## 🛠️ Technology Stack
--   **.NET 8** Minimal API
+-   **.NET 9** Minimal API
 -   **ASP.NET Core Identity & JWT**
 -   **Entity Framework Core** (SQLite)
 -   **AutoMapper** for DTO mapping
@@ -33,7 +33,7 @@ A robust, "Clean Architecture" inspired .NET 8 Minimal API project. This API pro
 ## 🏁 Getting Started
 
 ### Prerequisites
--   .NET 8 SDK
+-   .NET 9 SDK
 
 ### Build and Run
 ```bash

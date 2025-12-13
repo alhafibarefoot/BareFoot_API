@@ -1,4 +1,4 @@
-# 🦶 Barefoot API: Mastering Minimal APIs in .NET 8
+# 🦶 Barefoot API: Mastering Minimal APIs in .NET 9
 
 Welcome to the **Barefoot API** course! This guide will take you step-by-step from zero to a professional, production-ready Minimal API using clean architecture principles.
 
@@ -17,7 +17,7 @@ Welcome to the **Barefoot API** course! This guide will take you step-by-step fr
 ---
 
 ## 🛠️ Tech Stack
-- **.NET 8**
+- **.NET 9**
 - **Entity Framework Core**
 - **Sqlite / SQL Server**
 - **AutoMapper**

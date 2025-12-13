@@ -98,7 +98,7 @@ Minimal APIs automatically bind parameters.
 *   **Query Strings**: `?term=abc` -> `(string term)`
 
 > [!NOTE]
-> We rely on the framework's conventions. Explicit attributes like `[FromRoute]` are rarely needed in .NET 8 Minimal APIs.
+> We rely on the framework's conventions. Explicit attributes like `[FromRoute]` are rarely needed in .NET 9 Minimal APIs.
 
 ## 5. Swagger Customization
 To make our API documentation professional, we can add a title, description, and contact info in `Program.cs` (or via extensions).
@@ -109,7 +109,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Barefoot API",
-        Description = "Built with .NET 8 Minimal API",
+        Description = "Built with .NET 9 Minimal API",
         Contact = new OpenApiContact
         {
             Name = "Alhafi BareFoot",
