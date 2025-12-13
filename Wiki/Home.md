@@ -26,3 +26,6 @@ Welcome to the **Barefoot API** course! This guide will take you step-by-step fr
 
 > [!NOTE]
 > This course is based on the **Barefoot API** project architecture.
+
+## 📥 Downloads
+* [**Download Course PDF**](assets/MinimalAPI.pdf)
