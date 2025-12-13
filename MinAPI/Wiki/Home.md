@@ -29,3 +29,4 @@ Welcome to the **Barefoot API** course! This guide will take you step-by-step fr
 
 ## 📥 Downloads
 * [**Download Course PDF**](assets/MinimalAPI.pdf)
+* [**Google NotebookLM (Interactive Audio)**](https://notebooklm.google.com/notebook/b1e53748-2a0c-42e8-9fca-36210af3f31b)
