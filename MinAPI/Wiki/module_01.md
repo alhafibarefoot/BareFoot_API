@@ -24,13 +24,25 @@ Git is essential. A proper `.gitignore` prevents clutter (like `bin/`, `obj/`, `
 **Create a `.gitignore`** at the root of your solution with standard .NET content:
 
 ```gitignore
-## Ignore Visual Studio temporary files, build results, and user-specific files.
-bin/
-obj/
+# Build Results
+[bB]in/
+[oO]bj/
+
+# IDEs
 .vs/
 .vscode/
+.idea/
 *.user
-appsettings.local.json
+*.suo
+
+# Databases & Logs
+*.db
+*.sqlite
+*.log
+
+# Web
+node_modules/
+appsettings.Development.json
 ```
 
 ## 3. Project Structure
