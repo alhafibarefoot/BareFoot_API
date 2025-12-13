@@ -1,5 +1,9 @@
 # BareFoot API (MinAPI)
 
+
+> [!NOTE]
+> 🎧 **Listen to the interactive audio course on [Google NotebookLM](https://notebooklm.google.com/notebook/b1e53748-2a0c-42e8-9fca-36210af3f31b)**
+
 A robust, "Clean Architecture" inspired .NET 9 Minimal API project. This API provides news post management with advanced features like output caching, global error handling, and a dedicated service layer.
 
 ## 🚀 Key Features
