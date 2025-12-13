@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option csharp_namespace = "gRPC";
+
+package post;
+
+service PostService {
+  rpc CreatePost (CreatePostRequest) returns (PostModel);
+  rpc ReadPost (ReadPostRequest) returns (PostModel);
+  rpc ListPosts (ListPostsRequest) returns (ListPostsReply);
+}
+
+message PostModel {
+  int32 id = 1;
+  string title = 2;
+  string content = 3;
+  string post_image = 4;
+  string created_on = 5;
+}
+
+message CreatePostRequest {
+  string title = 1;
+  string content = 2;
+}
+
+message ReadPostRequest {
+  int32 id = 1;
+}
+
+message ListPostsRequest {}
+
+message ListPostsReply {
+  repeated PostModel posts = 1;
+}
