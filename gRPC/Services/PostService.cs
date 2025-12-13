@@ -28,6 +28,8 @@ namespace gRPC.Services
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Created post with ID: {PostId}", post.Id);
+
             return new PostModel
             {
                 Id = post.Id,
@@ -52,6 +54,54 @@ namespace gRPC.Services
                 Title = post.Title,
                 Content = post.Content,
                 CreatedOn = post.CreatedOn.ToString()
+            };
+        }
+
+        public override async Task<PostModel> UpdatePost(UpdatePostRequest request, ServerCallContext context)
+        {
+            var post = await _context.Posts.FindAsync(request.Id);
+
+            if (post == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"Post with ID={request.Id} is not found."));
+            }
+
+            // Update fields
+            post.Title = request.Title;
+            post.Content = request.Content;
+
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Updated post with ID: {PostId}", post.Id);
+
+            return new PostModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreatedOn = post.CreatedOn.ToString()
+            };
+        }
+
+        public override async Task<DeletePostReply> DeletePost(DeletePostRequest request, ServerCallContext context)
+        {
+            var post = await _context.Posts.FindAsync(request.Id);
+
+            if (post == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"Post with ID={request.Id} is not found."));
+            }
+
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Deleted post with ID: {PostId}", request.Id);
+
+            return new DeletePostReply
+            {
+                Success = true,
+                Message = $"Post with ID={request.Id} has been deleted successfully."
             };
         }
 

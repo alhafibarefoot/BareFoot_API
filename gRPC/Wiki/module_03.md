@@ -275,9 +275,99 @@ namespace gRPC.Services
 
             return reply;
         }
+
+        // Update operation
+        public override async Task<PostModel> UpdatePost(
+            UpdatePostRequest request,
+            ServerCallContext context)
+        {
+            var post = await _context.Posts.FindAsync(request.Id);
+
+            if (post == null)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.NotFound,
+                    $"Post with ID={request.Id} not found."));
+            }
+
+            // Update fields
+            post.Title = request.Title;
+            post.Content = request.Content;
+
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Updated post with ID: {PostId}", post.Id);
+
+            return new PostModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                CreatedOn = post.CreatedOn.ToString("o")
+            };
+        }
+
+        // Delete operation
+        public override async Task<DeletePostReply> DeletePost(
+            DeletePostRequest request,
+            ServerCallContext context)
+        {
+            var post = await _context.Posts.FindAsync(request.Id);
+
+            if (post == null)
+            {
+                throw new RpcException(new Status(
+                    StatusCode.NotFound,
+                    $"Post with ID={request.Id} not found."));
+            }
+
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Deleted post with ID: {PostId}", request.Id);
+
+            return new DeletePostReply
+            {
+                Success = true,
+                Message = $"Post with ID={request.Id} has been deleted successfully."
+            };
+        }
     }
 }
 ```
+
+### Key Points for Each Operation:
+
+**Create**:
+- Creates new entity from request
+- Adds to DbContext
+- Saves changes
+- Returns mapped Protobuf message with generated ID
+
+**Read**:
+- Finds entity by ID
+- Throws `NotFound` if doesn't exist
+- Returns mapped Protobuf message
+
+**Update**:
+- Finds existing entity
+- Throws `NotFound` if doesn't exist
+- Updates properties
+- Marks as modified and saves
+- Returns updated Protobuf message
+
+**Delete**:
+- Finds existing entity
+- Throws `NotFound` if doesn't exist
+- Removes from DbContext
+- Saves changes
+- Returns success response
+
+**List**:
+- Queries all posts
+- Projects to Protobuf messages
+- Returns collection in reply
 
 ## 8. Key Differences from REST APIs
 

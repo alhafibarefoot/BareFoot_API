@@ -45,9 +45,11 @@ gRPC/
 - **SayHello**: Simple greeting RPC
 - **Ping**: Health check endpoint
 
-#### 2. Post Service (CRUD Operations)
+#### 2. Post Service (Full CRUD Operations)
 - **CreatePost**: Create new blog posts
 - **ReadPost**: Retrieve post by ID
+- **UpdatePost**: Update existing post (title and content)
+- **DeletePost**: Delete post by ID
 - **ListPosts**: Get all posts
 
 ### Technical Features
@@ -132,8 +134,10 @@ The client provides an interactive menu:
 --- Menu ---
 1. Create New Post
 2. Read Post by ID
-3. List All Posts
-4. Exit
+3. Update Post
+4. Delete Post
+5. List All Posts
+6. Exit
 
 Select option:
 ```
@@ -141,8 +145,10 @@ Select option:
 **Example Usage:**
 
 1. **Create a Post**: Select option 1, enter title and content
-2. **List Posts**: Select option 3 to see all posts
-3. **Read Specific Post**: Select option 2, enter the post ID
+2. **Read a Post**: Select option 2, enter the post ID
+3. **Update a Post**: Select option 3, enter post ID and new data
+4. **Delete a Post**: Select option 4, enter post ID (with confirmation)
+5. **List All Posts**: Select option 5 to see all posts
 
 ### Option 2: Create Your Own Client
 
@@ -231,6 +237,8 @@ service Greeter {
 service PostService {
   rpc CreatePost (CreatePostRequest) returns (PostModel);
   rpc ReadPost (ReadPostRequest) returns (PostModel);
+  rpc UpdatePost (UpdatePostRequest) returns (PostModel);
+  rpc DeletePost (DeletePostRequest) returns (DeletePostReply);
   rpc ListPosts (ListPostsRequest) returns (ListPostsReply);
 }
 ```

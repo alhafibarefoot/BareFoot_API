@@ -7,6 +7,8 @@ package post;
 service PostService {
   rpc CreatePost (CreatePostRequest) returns (PostModel);
   rpc ReadPost (ReadPostRequest) returns (PostModel);
+  rpc UpdatePost (UpdatePostRequest) returns (PostModel);
+  rpc DeletePost (DeletePostRequest) returns (DeletePostReply);
   rpc ListPosts (ListPostsRequest) returns (ListPostsReply);
 }
 
@@ -25,6 +27,21 @@ message CreatePostRequest {
 
 message ReadPostRequest {
   int32 id = 1;
+}
+
+message UpdatePostRequest {
+  int32 id = 1;
+  string title = 2;
+  string content = 3;
+}
+
+message DeletePostRequest {
+  int32 id = 1;
+}
+
+message DeletePostReply {
+  bool success = 1;
+  string message = 2;
 }
 
 message ListPostsRequest {}
